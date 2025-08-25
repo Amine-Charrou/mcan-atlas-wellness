@@ -26,11 +26,23 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					light: 'hsl(var(--primary-light))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
+				},
+				moroccan: {
+					red: 'hsl(var(--moroccan-red))',
+					orange: 'hsl(var(--moroccan-orange))',
+					gold: 'hsl(var(--moroccan-gold))',
+					terracotta: 'hsl(var(--moroccan-terracotta))'
+				},
+				wellness: {
+					blue: 'hsl(var(--wellness-blue))',
+					green: 'hsl(var(--wellness-green))',
+					mint: 'hsl(var(--wellness-mint))'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
