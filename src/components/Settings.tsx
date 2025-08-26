@@ -14,15 +14,33 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function Settings() {
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
+  const { signOut, user } = useAuth();
   const [notifications, setNotifications] = useState({
     reminders: true,
     tips: true,
     achievements: false,
   });
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const languages = [
     { id: "ar", label: "العربية", nativeLabel: "Arabic" },
@@ -42,7 +60,7 @@ export function Settings() {
       title: t.support,
       items: [
         { id: "help", label: t.helpFAQ, icon: HelpCircle, action: () => {} },
-        { id: "logout", label: t.signOut, icon: LogOut, action: () => {}, danger: true },
+        { id: "logout", label: t.signOut, icon: LogOut, action: handleSignOut, danger: true },
       ],
     },
   ];
@@ -82,6 +100,9 @@ export function Settings() {
               </div>
               <h3 className="text-xl font-semibold mb-1">{t.welcomeUser}</h3>
               <p className="text-muted-foreground mb-2">
+                {user?.email || 'User'}
+              </p>
+              <p className="text-sm text-muted-foreground mb-2">
                 {t.memberSince} {new Date().getFullYear()}
               </p>
               <p className="text-sm text-moroccan-gold">
