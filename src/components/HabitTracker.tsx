@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface HabitData {
   id: string;
@@ -20,15 +21,16 @@ interface HabitData {
 
 export function HabitTracker() {
   const { toast } = useToast();
+  const { t } = useLanguage();
   
   const [habits, setHabits] = useState<HabitData[]>([
     {
       id: "water",
-      name: "Water Intake",
+      name: t.waterIntake,
       icon: Droplets,
       current: 6,
       target: 8,
-      unit: "glasses",
+      unit: t.glasses,
       color: "text-wellness-blue",
       bgColor: "bg-wellness-blue/10",
       min: 0,
@@ -36,11 +38,11 @@ export function HabitTracker() {
     },
     {
       id: "sleep",
-      name: "Sleep",
+      name: t.sleep,
       icon: Moon,
       current: 7.5,
       target: 8,
-      unit: "hours",
+      unit: t.hours,
       color: "text-primary",
       bgColor: "bg-primary/10",
       min: 0,
@@ -48,11 +50,11 @@ export function HabitTracker() {
     },
     {
       id: "activity",
-      name: "Physical Activity",
+      name: t.physicalActivity,
       icon: Activity,
       current: 45,
       target: 60,
-      unit: "minutes",
+      unit: t.minutes,
       color: "text-wellness-green",
       bgColor: "bg-wellness-green/10",
       min: 0,
@@ -63,7 +65,7 @@ export function HabitTracker() {
   const [mood, setMood] = useState(4);
 
   const moodLabels = ["😟", "😕", "😐", "😊", "😄"];
-  const moodDescriptions = ["Very sad", "Sad", "Okay", "Good", "Excellent"];
+  const moodDescriptions = [t.verySad, t.sad, t.okayMood, t.good, t.excellent];
 
   const updateHabit = (habitId: string, value: number) => {
     setHabits(prev =>
@@ -87,8 +89,8 @@ export function HabitTracker() {
 
   const saveProgress = () => {
     toast({
-      title: "Progress Saved! 🎉",
-      description: "Your daily habits have been updated successfully.",
+      title: t.progressSaved,
+      description: t.progressSavedDesc,
     });
   };
 
@@ -96,8 +98,8 @@ export function HabitTracker() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">Habit Tracker</h1>
-        <p className="text-muted-foreground">Log your daily wellness activities and track progress</p>
+        <h1 className="text-3xl font-bold text-primary mb-2">{t.habitTracker}</h1>
+        <p className="text-muted-foreground">{t.logDaily}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -106,7 +108,7 @@ export function HabitTracker() {
           <Card className="p-6">
             <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
               <Smile className="text-moroccan-orange" size={24} />
-              How's your mood today?
+              {t.howMoodToday}
             </h3>
             
             <div className="space-y-6">
@@ -150,7 +152,7 @@ export function HabitTracker() {
                     <div>
                       <h3 className="text-xl font-semibold">{habit.name}</h3>
                       <p className="text-muted-foreground">
-                        Target: {habit.target} {habit.unit}
+                        {t.target}: {habit.target} {habit.unit}
                       </p>
                     </div>
                   </div>
@@ -195,7 +197,7 @@ export function HabitTracker() {
                 {/* Progress Bar */}
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="font-medium">Progress</span>
+                    <span className="font-medium">{t.progress}</span>
                     <span className={`font-bold ${habit.color}`}>
                       {Math.round(percentage)}%
                     </span>
@@ -217,7 +219,7 @@ export function HabitTracker() {
             className="w-full h-14 bg-primary hover:bg-primary-light text-lg font-semibold"
           >
             <Check size={20} className="mr-2" />
-            Save Today's Progress
+            {t.saveTodaysProgress}
           </Button>
         </div>
       </div>

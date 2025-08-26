@@ -1,4 +1,5 @@
 import { Home, MessageCircle, Activity, Heart, Settings } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SidebarProps {
   activeScreen: string;
@@ -6,12 +7,14 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeScreen, onScreenChange }: SidebarProps) {
+  const { t } = useLanguage();
+  
   const navItems = [
-    { id: "dashboard", icon: Home, label: "Dashboard" },
-    { id: "chat", icon: MessageCircle, label: "AI Chat" },
-    { id: "habits", icon: Activity, label: "Habit Tracker" },
-    { id: "mental", icon: Heart, label: "Mental Wellness" },
-    { id: "settings", icon: Settings, label: "Settings" },
+    { id: "dashboard", icon: Home, label: t.dashboard },
+    { id: "chat", icon: MessageCircle, label: t.chat },
+    { id: "habits", icon: Activity, label: t.habits },
+    { id: "mental", icon: Heart, label: t.mentalHealth },
+    { id: "settings", icon: Settings, label: t.settings },
   ];
 
   return (

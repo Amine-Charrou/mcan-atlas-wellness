@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Heart, AlertTriangle, Lightbulb, BookOpen, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Tip {
   id: string;
@@ -13,11 +14,12 @@ interface Tip {
 }
 
 export function MentalHealthTips() {
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>("stress");
 
   const categories = [
-    { id: "stress", label: "Stress", icon: AlertTriangle, color: "text-moroccan-red" },
-    { id: "anxiety", label: "Anxiety", icon: Heart, color: "text-wellness-blue" },
+    { id: "stress", label: t.stressRelief, icon: AlertTriangle, color: "text-moroccan-red" },
+    { id: "anxiety", label: t.anxietyManagement, icon: Heart, color: "text-wellness-blue" },
     { id: "sadness", label: "Sadness", icon: Lightbulb, color: "text-moroccan-orange" },
     { id: "fatigue", label: "Fatigue", icon: RefreshCw, color: "text-wellness-green" },
   ];
@@ -90,7 +92,7 @@ export function MentalHealthTips() {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">Mental Wellness Tips</h1>
+        <h1 className="text-3xl font-bold text-primary mb-2">{t.mentalHealthTips}</h1>
         <p className="text-muted-foreground">Moroccan-inspired mental health guidance and support</p>
       </div>
 

@@ -2,42 +2,45 @@ import { MessageCircle, Droplets, Moon, Activity, Smile } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DashboardProps {
   onNavigate: (screen: string) => void;
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
+  const { t } = useLanguage();
+  
   const habits = [
     {
-      name: "Water Intake",
+      name: t.waterIntake,
       icon: Droplets,
       current: 6,
       target: 8,
-      unit: "glasses",
+      unit: t.glasses,
       color: "text-wellness-blue",
       bgColor: "bg-wellness-blue/10",
     },
     {
-      name: "Sleep",
+      name: t.sleep,
       icon: Moon,
       current: 7.5,
       target: 8,
-      unit: "hours",
+      unit: t.hours,
       color: "text-primary",
       bgColor: "bg-primary/10",
     },
     {
-      name: "Activity",
+      name: t.physicalActivity,
       icon: Activity,
       current: 45,
       target: 60,
-      unit: "minutes",
+      unit: t.minutes,
       color: "text-wellness-green",
       bgColor: "bg-wellness-green/10",
     },
     {
-      name: "Mood",
+      name: t.mood,
       icon: Smile,
       current: 4,
       target: 5,
@@ -61,7 +64,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       {/* Header */}
       <div className="bg-gradient-to-r from-primary to-primary-light text-primary-foreground p-8 rounded-xl">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Welcome back!</h1>
+          <h1 className="text-3xl font-bold mb-2">{t.welcomeBack}</h1>
           <p className="text-primary-foreground/80 text-lg">
             {new Date().toLocaleDateString('en-US', { 
               weekday: 'long', 
@@ -82,7 +85,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 <span className="text-moroccan-gold text-lg">✨</span>
               </div>
               <div>
-                <h3 className="font-semibold text-lg text-moroccan-gold mb-2">Daily Inspiration</h3>
+                <h3 className="font-semibold text-lg text-moroccan-gold mb-2">{t.dailyInspiration}</h3>
                 <p className="text-foreground/80 leading-relaxed">{todayProverb}</p>
               </div>
             </div>
@@ -90,14 +93,14 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
           {/* Quick Actions */}
           <div>
-            <h2 className="font-bold text-xl mb-4 text-foreground">Quick Actions</h2>
+            <h2 className="font-bold text-xl mb-4 text-foreground">{t.quickActions}</h2>
             <div className="grid grid-cols-1 gap-3">
               <Button
                 onClick={() => onNavigate("chat")}
                 className="h-16 bg-primary hover:bg-primary-light flex items-center justify-center gap-3 text-lg"
               >
                 <MessageCircle size={24} />
-                <span>Chat with Mcan AI</span>
+                <span>{t.chatWithMcan}</span>
               </Button>
               <Button
                 onClick={() => onNavigate("habits")}
@@ -105,7 +108,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 className="h-16 border-primary/20 hover:bg-primary/5 flex items-center justify-center gap-3 text-lg"
               >
                 <Activity size={24} />
-                <span>Log Your Habits</span>
+                <span>{t.logYourHabits}</span>
               </Button>
             </div>
           </div>
@@ -113,7 +116,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
         {/* Right Column - Today's Progress */}
         <div className="lg:col-span-2">
-          <h2 className="font-bold text-xl mb-6 text-foreground">Today's Progress</h2>
+          <h2 className="font-bold text-xl mb-6 text-foreground">{t.todaysProgress}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {habits.map((habit, index) => {
               const percentage = (habit.current / habit.target) * 100;

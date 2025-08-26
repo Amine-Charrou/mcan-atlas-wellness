@@ -3,6 +3,7 @@ import { Send, ThumbsUp, ThumbsDown, Smile, Frown, Meh } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Message {
   id: number;
@@ -13,6 +14,8 @@ interface Message {
 }
 
 export function ChatAssistant() {
+  const { t } = useLanguage();
+  
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
@@ -26,9 +29,9 @@ export function ChatAssistant() {
   const [selectedMood, setSelectedMood] = useState<string>("");
 
   const moods = [
-    { id: "happy", icon: Smile, label: "Happy", color: "text-wellness-green" },
-    { id: "neutral", icon: Meh, label: "Okay", color: "text-moroccan-orange" },
-    { id: "sad", icon: Frown, label: "Not great", color: "text-moroccan-red" },
+    { id: "happy", icon: Smile, label: t.happy, color: "text-wellness-green" },
+    { id: "neutral", icon: Meh, label: t.okay, color: "text-moroccan-orange" },
+    { id: "sad", icon: Frown, label: t.notGreat, color: "text-moroccan-red" },
   ];
 
   const sendMessage = () => {
@@ -91,8 +94,8 @@ export function ChatAssistant() {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">AI Chat Assistant</h1>
-        <p className="text-muted-foreground">Get personalized wellness guidance with Moroccan cultural insights</p>
+        <h1 className="text-3xl font-bold text-primary mb-2">{t.aiChatAssistant}</h1>
+        <p className="text-muted-foreground">{t.personalizedWellness}</p>
       </div>
 
       {/* Chat Container */}
@@ -132,7 +135,7 @@ export function ChatAssistant() {
                       }`}
                     >
                       <ThumbsUp size={14} />
-                      <span className="ml-1 text-xs">Helpful</span>
+                      <span className="ml-1 text-xs">{t.helpful}</span>
                     </Button>
                     <Button
                       size="sm"
@@ -143,7 +146,7 @@ export function ChatAssistant() {
                       }`}
                     >
                       <ThumbsDown size={14} />
-                      <span className="ml-1 text-xs">Not helpful</span>
+                      <span className="ml-1 text-xs">{t.notHelpful}</span>
                     </Button>
                   </div>
                 )}
@@ -154,7 +157,7 @@ export function ChatAssistant() {
 
         {/* Mood Selection */}
         <div className="p-6 border-t bg-card/50">
-          <p className="font-medium mb-3">How are you feeling?</p>
+          <p className="font-medium mb-3">{t.howFeeling}</p>
           <div className="grid grid-cols-3 gap-3">
             {moods.map(({ id, icon: Icon, label, color }) => (
               <Button
@@ -174,7 +177,7 @@ export function ChatAssistant() {
         <div className="p-6 border-t bg-card">
           <div className="flex gap-3">
             <Input
-              placeholder="Type your message..."
+              placeholder={t.typeMessage}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && sendMessage()}
