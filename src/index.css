@@ -8,28 +8,34 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Moroccan-inspired color palette */
-    --background: 0 0% 98%;
-    --foreground: 160 25% 25%;
+    /* Mcan Color Palette - Specified Design System */
+    /* Background Cream: #F2E8DC */
+    --background: 33 48% 91%;
+    /* Dark Navy: #2D3047 - Text and contrast elements */
+    --foreground: 233 22% 23%;
 
     --card: 0 0% 100%;
-    --card-foreground: 160 25% 25%;
+    --card-foreground: 233 22% 23%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 160 25% 25%;
+    --popover-foreground: 233 22% 23%;
 
-    /* Primary: Deep Moroccan Green */
-    --primary: 160 45% 35%;
+    /* Primary Green: #0A5F55 - Dark teal for headers and primary buttons */
+    --primary: 165 81% 20%;
     --primary-foreground: 0 0% 98%;
-    --primary-light: 160 35% 50%;
+    --primary-light: 165 70% 30%;
 
-    /* Secondary: Soft Calming Blue */
-    --secondary: 200 40% 85%;
-    --secondary-foreground: 160 25% 25%;
+    /* Secondary Teal: #8BBABB - Icons and secondary elements */
+    --secondary: 181 25% 64%;
+    --secondary-foreground: 233 22% 23%;
 
-    /* Moroccan Accent Colors */
+    /* Accent Orange: #D97D48 - Call-to-action buttons and highlights */
+    --accent: 22 68% 57%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Moroccan Cultural Colors */
     --moroccan-red: 8 70% 55%;
-    --moroccan-orange: 25 85% 60%;
+    --moroccan-orange: 22 68% 57%;
     --moroccan-gold: 45 85% 65%;
     --moroccan-terracotta: 15 60% 50%;
 
@@ -38,20 +44,17 @@ All colors MUST be HSL.
     --wellness-green: 150 50% 65%;
     --wellness-mint: 165 45% 75%;
 
-    --muted: 160 15% 92%;
-    --muted-foreground: 160 15% 45%;
-
-    --accent: 165 45% 75%;
-    --accent-foreground: 160 25% 25%;
+    --muted: 33 35% 85%;
+    --muted-foreground: 233 15% 45%;
 
     --destructive: 0 70% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 160 15% 88%;
-    --input: 160 15% 88%;
-    --ring: 160 45% 35%;
+    --border: 33 25% 80%;
+    --input: 33 25% 80%;
+    --ring: 165 81% 20%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -71,33 +74,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 160 25% 8%;
-    --foreground: 0 0% 95%;
+    --background: 233 25% 8%;
+    --foreground: 33 48% 91%;
 
-    --card: 160 25% 12%;
-    --card-foreground: 0 0% 95%;
+    --card: 233 25% 12%;
+    --card-foreground: 33 48% 91%;
 
-    --popover: 160 25% 12%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 233 25% 12%;
+    --popover-foreground: 33 48% 91%;
 
-    --primary: 165 45% 75%;
-    --primary-foreground: 160 25% 8%;
+    --primary: 181 40% 70%;
+    --primary-foreground: 233 25% 8%;
 
-    --secondary: 160 20% 18%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 181 25% 64%;
+    --secondary-foreground: 33 48% 91%;
 
-    --muted: 160 20% 18%;
-    --muted-foreground: 160 10% 65%;
+    --muted: 233 20% 18%;
+    --muted-foreground: 233 10% 65%;
 
-    --accent: 165 45% 75%;
-    --accent-foreground: 160 25% 8%;
+    --accent: 22 68% 57%;
+    --accent-foreground: 233 25% 8%;
 
     --destructive: 0 70% 60%;
-    --destructive-foreground: 0 0% 95%;
+    --destructive-foreground: 33 48% 91%;
 
-    --border: 160 20% 18%;
-    --input: 160 20% 18%;
-    --ring: 165 45% 75%;
+    --border: 233 20% 18%;
+    --input: 233 20% 18%;
+    --ring: 181 40% 70%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -115,6 +118,31 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-header;
+  }
+}
+
+/* Moroccan Pattern Background */
+.moroccan-pattern {
+  background-image: 
+    radial-gradient(circle at 25% 25%, hsl(var(--moroccan-gold) / 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, hsl(var(--moroccan-orange) / 0.05) 0%, transparent 50%);
+}
+
+/* Mobile-first optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improved touch targets for mobile */
+  button, .btn, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
