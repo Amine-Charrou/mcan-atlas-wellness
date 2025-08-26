@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navigation } from "@/components/Navigation";
+import { Sidebar } from "@/components/Sidebar";
 import { Dashboard } from "@/components/Dashboard";
 import { ChatAssistant } from "@/components/ChatAssistant";
 import { HabitTracker } from "@/components/HabitTracker";
@@ -27,14 +27,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="max-w-md mx-auto bg-background min-h-screen">
-        {renderScreen()}
-      </main>
-      <Navigation 
+    <div className="min-h-screen bg-background flex">
+      <Sidebar 
         activeScreen={activeScreen} 
         onScreenChange={setActiveScreen} 
       />
+      <main className="flex-1 overflow-auto">
+        <div className="container mx-auto p-6 max-w-6xl">
+          {renderScreen()}
+        </div>
+      </main>
     </div>
   );
 };

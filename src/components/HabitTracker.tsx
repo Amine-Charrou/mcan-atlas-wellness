@@ -93,138 +93,133 @@ export function HabitTracker() {
   };
 
   return (
-    <div className="pb-20 bg-gradient-to-b from-background to-accent/20">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground px-4 py-6 rounded-b-3xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold">Track Your Habits</h1>
-            <p className="text-primary-foreground/80 text-sm">
-              Log your daily wellness activities
-            </p>
-          </div>
-          <img src="/lovable-uploads/b08888ad-2807-4919-a00e-2fd1b123b8f9.png" alt="Mcan Logo" className="h-10 w-auto" />
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-primary mb-2">Habit Tracker</h1>
+        <p className="text-muted-foreground">Log your daily wellness activities and track progress</p>
       </div>
 
-      <div className="px-4 -mt-4 space-y-6">
-        {/* Mood Tracker */}
-        <Card className="p-4">
-          <h3 className="font-semibold mb-3 flex items-center gap-2">
-            <Smile className="text-moroccan-orange" size={20} />
-            How's your mood today?
-          </h3>
-          
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              {moodLabels.map((emoji, index) => (
-                <button
-                  key={index}
-                  onClick={() => setMood(index + 1)}
-                  className={`text-2xl p-2 rounded-full transition-all ${
-                    mood === index + 1 
-                      ? "bg-moroccan-orange/20 scale-125" 
-                      : "hover:bg-muted"
-                  }`}
-                >
-                  {emoji}
-                </button>
-              ))}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column - Mood Tracker */}
+        <div className="lg:col-span-1">
+          <Card className="p-6">
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
+              <Smile className="text-moroccan-orange" size={24} />
+              How's your mood today?
+            </h3>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-5 gap-2">
+                {moodLabels.map((emoji, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setMood(index + 1)}
+                    className={`text-3xl p-3 rounded-xl transition-all ${
+                      mood === index + 1 
+                        ? "bg-moroccan-orange/20 scale-110 shadow-md" 
+                        : "hover:bg-muted"
+                    }`}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+              <div className="text-center">
+                <span className="text-lg font-medium text-moroccan-orange">
+                  {moodDescriptions[mood - 1]}
+                </span>
+              </div>
             </div>
-            <div className="text-center">
-              <span className="text-sm text-muted-foreground">
-                {moodDescriptions[mood - 1]}
-              </span>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
 
-        {/* Habit Tracking */}
-        {habits.map((habit) => {
-          const Icon = habit.icon;
-          const percentage = (habit.current / habit.target) * 100;
-          
-          return (
-            <Card key={habit.id} className="p-4">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-full ${habit.bgColor}`}>
-                    <Icon size={18} className={habit.color} />
+        {/* Right Columns - Habit Tracking */}
+        <div className="lg:col-span-2 space-y-6">
+          {habits.map((habit) => {
+            const Icon = habit.icon;
+            const percentage = (habit.current / habit.target) * 100;
+            
+            return (
+              <Card key={habit.id} className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-full ${habit.bgColor}`}>
+                      <Icon size={24} className={habit.color} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">{habit.name}</h3>
+                      <p className="text-muted-foreground">
+                        Target: {habit.target} {habit.unit}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium">{habit.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Target: {habit.target} {habit.unit}
-                    </p>
+                  <div className="text-right">
+                    <span className={`text-2xl font-bold ${habit.color}`}>
+                      {habit.current}
+                    </span>
+                    <p className="text-sm text-muted-foreground">{habit.unit}</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className={`text-lg font-bold ${habit.color}`}>
-                    {habit.current}
-                  </span>
-                  <p className="text-xs text-muted-foreground">{habit.unit}</p>
-                </div>
-              </div>
 
-              {/* Quick Action Buttons */}
-              <div className="flex items-center gap-3 mb-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => quickAdd(habit.id, -1)}
-                  className="flex-shrink-0"
-                >
-                  <Minus size={16} />
-                </Button>
-                
-                <div className="flex-1">
-                  <Slider
-                    value={[habit.current]}
-                    onValueChange={([value]) => updateHabit(habit.id, value)}
-                    max={habit.max}
-                    min={habit.min}
-                    step={habit.id === "sleep" ? 0.5 : 1}
-                    className="w-full"
-                  />
+                {/* Quick Action Buttons */}
+                <div className="flex items-center gap-4 mb-6">
+                  <Button
+                    variant="outline"
+                    onClick={() => quickAdd(habit.id, -1)}
+                    className="flex-shrink-0"
+                  >
+                    <Minus size={18} />
+                  </Button>
+                  
+                  <div className="flex-1">
+                    <Slider
+                      value={[habit.current]}
+                      onValueChange={([value]) => updateHabit(habit.id, value)}
+                      max={habit.max}
+                      min={habit.min}
+                      step={habit.id === "sleep" ? 0.5 : 1}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <Button
+                    variant="outline"
+                    onClick={() => quickAdd(habit.id, 1)}
+                    className="flex-shrink-0"
+                  >
+                    <Plus size={18} />
+                  </Button>
                 </div>
-                
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => quickAdd(habit.id, 1)}
-                  className="flex-shrink-0"
-                >
-                  <Plus size={16} />
-                </Button>
-              </div>
 
-              {/* Progress Bar */}
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Progress</span>
-                  <span className={habit.color}>
-                    {Math.round(percentage)}%
-                  </span>
+                {/* Progress Bar */}
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="font-medium">Progress</span>
+                    <span className={`font-bold ${habit.color}`}>
+                      {Math.round(percentage)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div
+                      className={`h-3 rounded-full transition-all duration-300 ${habit.bgColor.replace('/10', '/50')}`}
+                      style={{ width: `${Math.min(percentage, 100)}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full transition-all duration-300 ${habit.bgColor.replace('/10', '/50')}`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
-                </div>
-              </div>
-            </Card>
-          );
-        })}
+              </Card>
+            );
+          })}
 
-        {/* Save Button */}
-        <Button 
-          onClick={saveProgress}
-          className="w-full h-12 bg-primary hover:bg-primary-light text-lg font-semibold"
-        >
-          <Check size={20} className="mr-2" />
-          Save Today's Progress
-        </Button>
+          {/* Save Button */}
+          <Button 
+            onClick={saveProgress}
+            className="w-full h-14 bg-primary hover:bg-primary-light text-lg font-semibold"
+          >
+            <Check size={20} className="mr-2" />
+            Save Today's Progress
+          </Button>
+        </div>
       </div>
     </div>
   );

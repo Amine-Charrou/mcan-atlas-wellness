@@ -88,101 +88,102 @@ export function ChatAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background pb-20">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground px-4 py-4 flex items-center gap-3 shadow-sm">
-        <img src="/lovable-uploads/b08888ad-2807-4919-a00e-2fd1b123b8f9.png" alt="Mcan" className="h-8 w-auto" />
-        <div>
-          <h1 className="font-bold text-lg">Mcan Assistant</h1>
-          <p className="text-xs text-primary-foreground/80">Your wellness companion</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-primary mb-2">AI Chat Assistant</h1>
+        <p className="text-muted-foreground">Get personalized wellness guidance with Moroccan cultural insights</p>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-          >
-            <div className="max-w-[80%]">
-              <Card
-                className={`p-3 ${
-                  message.sender === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-accent/50"
-                }`}
-              >
-                <p className="text-sm leading-relaxed">{message.text}</p>
-                <p className="text-xs mt-2 opacity-70">
-                  {message.timestamp.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
-              </Card>
-              
-              {message.sender === "ai" && (
-                <div className="flex gap-2 mt-2 justify-start">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => giveFeedback(message.id, "helpful")}
-                    className={`h-6 px-2 ${
-                      message.feedback === "helpful" ? "bg-wellness-green/20 text-wellness-green" : ""
-                    }`}
-                  >
-                    <ThumbsUp size={12} />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => giveFeedback(message.id, "not-helpful")}
-                    className={`h-6 px-2 ${
-                      message.feedback === "not-helpful" ? "bg-moroccan-red/20 text-moroccan-red" : ""
-                    }`}
-                  >
-                    <ThumbsDown size={12} />
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Mood Selection */}
-      <div className="px-4 py-3 border-t bg-card/50">
-        <p className="text-sm font-medium mb-2">How are you feeling?</p>
-        <div className="flex gap-2">
-          {moods.map(({ id, icon: Icon, label, color }) => (
-            <Button
-              key={id}
-              size="sm"
-              variant={selectedMood === id ? "default" : "outline"}
-              onClick={() => setSelectedMood(selectedMood === id ? "" : id)}
-              className="flex-1 h-10"
+      {/* Chat Container */}
+      <div className="bg-card rounded-xl border shadow-sm overflow-hidden">
+        {/* Messages */}
+        <div className="h-96 overflow-y-auto p-6 space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
             >
-              <Icon size={16} className={selectedMood === id ? "" : color} />
-              <span className="ml-1 text-xs">{label}</span>
-            </Button>
+              <div className="max-w-[70%]">
+                <Card
+                  className={`p-4 ${
+                    message.sender === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-accent/50"
+                  }`}
+                >
+                  <p className="leading-relaxed">{message.text}</p>
+                  <p className="text-xs mt-2 opacity-70">
+                    {message.timestamp.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </Card>
+                
+                {message.sender === "ai" && (
+                  <div className="flex gap-2 mt-2 justify-start">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => giveFeedback(message.id, "helpful")}
+                      className={`h-8 px-3 ${
+                        message.feedback === "helpful" ? "bg-wellness-green/20 text-wellness-green" : ""
+                      }`}
+                    >
+                      <ThumbsUp size={14} />
+                      <span className="ml-1 text-xs">Helpful</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => giveFeedback(message.id, "not-helpful")}
+                      className={`h-8 px-3 ${
+                        message.feedback === "not-helpful" ? "bg-moroccan-red/20 text-moroccan-red" : ""
+                      }`}
+                    >
+                      <ThumbsDown size={14} />
+                      <span className="ml-1 text-xs">Not helpful</span>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
           ))}
         </div>
-      </div>
 
-      {/* Input */}
-      <div className="p-4 border-t bg-card">
-        <div className="flex gap-2">
-          <Input
-            placeholder="Type your message..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && sendMessage()}
-            className="flex-1"
-          />
-          <Button onClick={sendMessage} size="icon" className="bg-primary hover:bg-primary-light">
-            <Send size={18} />
-          </Button>
+        {/* Mood Selection */}
+        <div className="p-6 border-t bg-card/50">
+          <p className="font-medium mb-3">How are you feeling?</p>
+          <div className="grid grid-cols-3 gap-3">
+            {moods.map(({ id, icon: Icon, label, color }) => (
+              <Button
+                key={id}
+                variant={selectedMood === id ? "default" : "outline"}
+                onClick={() => setSelectedMood(selectedMood === id ? "" : id)}
+                className="h-12 flex items-center justify-center gap-2"
+              >
+                <Icon size={18} className={selectedMood === id ? "" : color} />
+                <span className="text-sm">{label}</span>
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Input */}
+        <div className="p-6 border-t bg-card">
+          <div className="flex gap-3">
+            <Input
+              placeholder="Type your message..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+              className="flex-1"
+            />
+            <Button onClick={sendMessage} className="bg-primary hover:bg-primary-light px-6">
+              <Send size={18} />
+            </Button>
+          </div>
         </div>
       </div>
     </div>

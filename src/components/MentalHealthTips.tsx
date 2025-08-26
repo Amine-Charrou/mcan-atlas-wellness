@@ -87,100 +87,97 @@ export function MentalHealthTips() {
   const currentCategory = categories.find(cat => cat.id === selectedCategory);
 
   return (
-    <div className="pb-20 bg-gradient-to-b from-background to-accent/20">
+    <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
-      <div className="bg-primary text-primary-foreground px-4 py-6 rounded-b-3xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold">Wellness Tips</h1>
-            <p className="text-primary-foreground/80 text-sm">
-              Moroccan-inspired mental health guidance
-            </p>
-          </div>
-          <img src="/lovable-uploads/b08888ad-2807-4919-a00e-2fd1b123b8f9.png" alt="Mcan Logo" className="h-10 w-auto" />
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-primary mb-2">Mental Wellness Tips</h1>
+        <p className="text-muted-foreground">Moroccan-inspired mental health guidance and support</p>
       </div>
 
-      <div className="px-4 -mt-4">
-        {/* Category Selection */}
-        <Card className="p-4 mb-6">
-          <h3 className="font-semibold mb-3 text-center">What would you like help with?</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {categories.map((category) => {
-              const Icon = category.icon;
-              return (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className="h-16 flex flex-col gap-1"
-                >
-                  <Icon size={20} className={selectedCategory === category.id ? "" : category.color} />
-                  <span className="text-xs">{category.label}</span>
-                </Button>
-              );
-            })}
-          </div>
-        </Card>
-
-        {/* Burnout Alert */}
-        {selectedCategory === "stress" && (
-          <Card className="p-4 mb-6 border-moroccan-red/30 bg-moroccan-red/5">
-            <div className="flex items-start gap-3">
-              <AlertTriangle className="text-moroccan-red mt-1" size={20} />
-              <div>
-                <h3 className="font-semibold text-moroccan-red mb-1">Burnout Alert</h3>
-                <p className="text-sm text-foreground/80">
-                  If you're experiencing chronic stress, consider taking a break and speaking with a healthcare professional.
-                </p>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Left Column - Category Selection */}
+        <div className="lg:col-span-1">
+          <Card className="p-6">
+            <h3 className="text-xl font-semibold mb-4 text-center">What would you like help with?</h3>
+            <div className="space-y-3">
+              {categories.map((category) => {
+                const Icon = category.icon;
+                return (
+                  <Button
+                    key={category.id}
+                    variant={selectedCategory === category.id ? "default" : "outline"}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className="w-full h-14 flex items-center justify-start gap-3 text-left"
+                  >
+                    <Icon size={20} className={selectedCategory === category.id ? "" : category.color} />
+                    <span>{category.label}</span>
+                  </Button>
+                );
+              })}
             </div>
-          </Card>
-        )}
 
-        {/* Tips Display */}
-        <div className="space-y-4">
-          {filteredTips.map((tip, index) => (
-            <Card key={tip.id} className="p-4 hover:shadow-md transition-shadow">
-              <div className="flex items-start gap-3 mb-3">
-                <div className={`p-2 rounded-full bg-${currentCategory?.color.split('-')[1]}/10 mt-1`}>
-                  <BookOpen size={16} className={currentCategory?.color} />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-semibold text-sm mb-1">{tip.title}</h4>
-                  <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-                    {tip.description}
-                  </p>
-                  
-                  <div className="bg-accent/30 rounded-lg p-3 mb-3">
-                    <h5 className="font-medium text-sm mb-1 text-primary">Action Step:</h5>
-                    <p className="text-sm">{tip.action}</p>
+            {/* Burnout Alert */}
+            {selectedCategory === "stress" && (
+              <Card className="p-4 mt-6 border-moroccan-red/30 bg-moroccan-red/5">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="text-moroccan-red mt-1" size={20} />
+                  <div>
+                    <h4 className="font-semibold text-moroccan-red mb-1">Burnout Alert</h4>
+                    <p className="text-sm text-foreground/80">
+                      If experiencing chronic stress, consider professional help.
+                    </p>
                   </div>
-
-                  {tip.moroccanWisdom && (
-                    <div className="border-l-2 border-moroccan-gold pl-3">
-                      <p className="text-sm italic text-moroccan-gold">{tip.moroccanWisdom}</p>
-                    </div>
-                  )}
                 </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            )}
+          </Card>
         </div>
 
-        {/* Emergency Support */}
-        <Card className="p-4 mt-6 border-wellness-blue/30 bg-wellness-blue/5">
-          <div className="text-center">
-            <Heart className="text-wellness-blue mx-auto mb-2" size={24} />
-            <h3 className="font-semibold text-wellness-blue mb-1">Need immediate support?</h3>
-            <p className="text-sm text-foreground/80 mb-3">
-              Remember, it's okay to seek help. You're not alone in this journey.
-            </p>
-            <Button variant="outline" size="sm" className="text-wellness-blue border-wellness-blue/30">
-              Find Professional Help
-            </Button>
+        {/* Right Columns - Tips Display */}
+        <div className="lg:col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredTips.map((tip) => (
+              <Card key={tip.id} className="p-6 hover:shadow-lg transition-all duration-200">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className={`p-3 rounded-full bg-${currentCategory?.color.split('-')[1]}/10`}>
+                    <BookOpen size={20} className={currentCategory?.color} />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold mb-2">{tip.title}</h4>
+                    <p className="text-muted-foreground mb-4 leading-relaxed">
+                      {tip.description}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="bg-accent/30 rounded-lg p-4 mb-4">
+                  <h5 className="font-semibold mb-2 text-primary">Action Step:</h5>
+                  <p className="text-sm">{tip.action}</p>
+                </div>
+
+                {tip.moroccanWisdom && (
+                  <div className="border-l-4 border-moroccan-gold pl-4">
+                    <p className="text-sm italic text-moroccan-gold">{tip.moroccanWisdom}</p>
+                  </div>
+                )}
+              </Card>
+            ))}
           </div>
-        </Card>
+
+          {/* Emergency Support */}
+          <Card className="p-6 mt-8 border-wellness-blue/30 bg-wellness-blue/5">
+            <div className="text-center">
+              <Heart className="text-wellness-blue mx-auto mb-3" size={32} />
+              <h3 className="text-xl font-semibold text-wellness-blue mb-2">Need immediate support?</h3>
+              <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                Remember, it's okay to seek help. You're not alone in this journey.
+              </p>
+              <Button variant="outline" className="text-wellness-blue border-wellness-blue/30 hover:bg-wellness-blue/10">
+                Find Professional Help
+              </Button>
+            </div>
+          </Card>
+        </div>
       </div>
     </div>
   );
