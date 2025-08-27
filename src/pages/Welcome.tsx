@@ -165,7 +165,7 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
           <div className="mx-auto max-w-4xl">
             <div className="mb-8 flex justify-center">
               <img 
-                src="/lovable-uploads/b08888ad-2807-4919-a00e-2fd1b123b8f9.png" 
+                src="/mcan-logo.png" 
                 alt="Mcan AI Health System Logo" 
                 className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg object-contain"
               />
