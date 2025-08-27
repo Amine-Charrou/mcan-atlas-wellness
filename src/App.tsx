@@ -8,13 +8,20 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { Welcome } from "./pages/Welcome";
 import { Auth } from "./pages/Auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState("welcome");
+
+  // Reset to welcome page when user signs out
+  useEffect(() => {
+    if (!user && !loading) {
+      setCurrentPage("welcome");
+    }
+  }, [user, loading]);
 
   if (loading) {
     return (
