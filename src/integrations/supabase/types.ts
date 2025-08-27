@@ -19,6 +19,7 @@ export type Database = {
           activity_minutes: number | null
           created_at: string
           date: string
+          day_of_week: string | null
           id: string
           mood: string | null
           sleep_hours: number | null
@@ -30,6 +31,7 @@ export type Database = {
           activity_minutes?: number | null
           created_at?: string
           date?: string
+          day_of_week?: string | null
           id?: string
           mood?: string | null
           sleep_hours?: number | null
@@ -41,6 +43,7 @@ export type Database = {
           activity_minutes?: number | null
           created_at?: string
           date?: string
+          day_of_week?: string | null
           id?: string
           mood?: string | null
           sleep_hours?: number | null
