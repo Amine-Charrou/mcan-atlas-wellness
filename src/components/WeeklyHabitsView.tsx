@@ -150,30 +150,38 @@ export function WeeklyHabitsView() {
 
       console.log('Weekly data loaded:', data);
 
-      // Create array for all 7 days with dynamic data
+      // Create array for all 7 days (Monday to Sunday) with proper structure
       const weekData: WeeklyData[] = [];
       const moodCounts: { [key: string]: number } = {};
       
+      // Generate all 7 days from Monday to Sunday
       for (let i = 0; i < 7; i++) {
         const currentDate = new Date(startDate);
         currentDate.setDate(startDate.getDate() + i);
         const dateString = currentDate.toISOString().split('T')[0];
         
+        // Find data for this specific date
         const dayEntry = data?.find(entry => entry.date === dateString);
         
-        weekData.push({
+        // Create structured day data
+        const dayData: WeeklyData = {
           date: dateString,
           water: dayEntry?.water_glasses || 0,
           sleep: dayEntry?.sleep_hours || 0,
           activity: dayEntry?.activity_minutes || 0,
           mood: dayEntry?.mood || 'okay',
           dayName: getLocalizedDayName(currentDate)
-        });
+        };
+        
+        weekData.push(dayData);
 
-        // Count moods dynamically
+        // Count moods for distribution
         const mood = dayEntry?.mood || 'okay';
         moodCounts[mood] = (moodCounts[mood] || 0) + 1;
       }
+      
+      // Ensure we have exactly 7 days in correct order (Mon-Sun)
+      console.log('Week structure:', weekData.map(d => ({ day: d.dayName, date: d.date, hasData: d.water > 0 || d.sleep > 0 || d.activity > 0 })));
 
       setWeeklyData(weekData);
       
