@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Activity, MessageCircle, Shield, Users, Sparkles, Zap, Brain, Radio } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Heart, Activity, MessageCircle, Shield, Users, Sparkles, Zap, Brain, Radio, Globe, Quote } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import aiCompanion from "@/assets/ai-companion.png";
 
@@ -9,13 +10,15 @@ interface WelcomeProps {
 }
 
 export const Welcome = ({ onNavigate }: WelcomeProps) => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   const content = {
     en: {
       title: "Welcome to Mcan AI Health System",
       subtitle: "Your Personal Health & Wellness Companion",
       description: "Take control of your mental and physical health with AI-powered insights, habit tracking, and personalized wellness guidance.",
+      proverb: "Health is a crown on the head of the healthy person, visible only to the sick",
+      proverbAuthor: "Moroccan Proverb",
       getStarted: "Get Started",
       learnMore: "Learn More",
       features: {
@@ -63,6 +66,8 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
       title: "Bienvenue sur Mcan AI Health System",
       subtitle: "Votre Compagnon Personnel de Santé et Bien-être",
       description: "Prenez le contrôle de votre santé mentale et physique avec des insights alimentés par l'IA, le suivi d'habitudes et des conseils de bien-être personnalisés.",
+      proverb: "La santé est une couronne sur la tête des bien-portants, que seuls les malades peuvent voir",
+      proverbAuthor: "Proverbe Marocain",
       getStarted: "Commencer",
       learnMore: "En Savoir Plus",
       features: {
@@ -110,6 +115,8 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
       title: "مرحباً بك في نظام مكان للصحة الذكي",
       subtitle: "رفيقك الشخصي للصحة والعافية",
       description: "تحكم في صحتك النفسية والجسدية مع رؤى مدعومة بالذكاء الاصطناعي وتتبع العادات وإرشادات العافية المخصصة.",
+      proverb: "الصحة تاج على رؤوس الأصحاء لا يراه إلا المرضى",
+      proverbAuthor: "مثل مغربي",
       getStarted: "ابدأ الآن",
       learnMore: "اعرف المزيد",
       features: {
@@ -159,6 +166,21 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20 moroccan-pattern">
+      {/* Language Selector */}
+      <div className="absolute top-6 right-6 z-50">
+        <Select value={language} onValueChange={(value) => setLanguage(value as 'en' | 'fr' | 'ar')}>
+          <SelectTrigger className="w-40 bg-white/10 border-white/20 text-foreground backdrop-blur-sm">
+            <Globe className="w-4 h-4 mr-2" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">🇺🇸 English</SelectItem>
+            <SelectItem value="fr">🇫🇷 Français</SelectItem>
+            <SelectItem value="ar">🇲🇦 العربية</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-grid-16 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
@@ -201,6 +223,26 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
             <p className={`mb-8 text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in ${language === 'ar' ? 'arabic-text font-amiri' : ''}`} style={{animationDelay: '0.2s'}}>
               {t.description}
             </p>
+
+            {/* Moroccan Proverb */}
+            <div className="mb-8 animate-fade-in" style={{animationDelay: '0.3s'}}>
+              <Card className="max-w-2xl mx-auto bg-gradient-to-r from-moroccan-gold/10 to-moroccan-orange/10 border-moroccan-gold/30 backdrop-blur-sm">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    <Quote className="w-6 h-6 text-moroccan-gold mt-1 animate-pulse" />
+                    <div className="text-center flex-1">
+                      <p className={`text-lg italic text-foreground mb-2 ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>
+                        "{t.proverb}"
+                      </p>
+                      <p className={`text-sm text-muted-foreground ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>
+                        — {t.proverbAuthor}
+                      </p>
+                    </div>
+                    <Quote className="w-6 h-6 text-moroccan-gold mt-1 rotate-180 animate-pulse" style={{animationDelay: '1s'}} />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
             
             {/* AI Companion Image */}
             <div className="mb-8 flex justify-center">
