@@ -177,7 +177,8 @@ export function WeeklyHabitsView() {
           sleep: dayEntry?.sleep_hours || 0,
           activity: dayEntry?.activity_minutes || 0,
           mood: dayEntry?.mood || 'okay',
-          dayName: getLocalizedDayName(currentDate)
+          // Use the day_of_week from database if available, otherwise calculate
+          dayName: dayEntry?.day_of_week?.trim() || getLocalizedDayName(currentDate)
         };
         
         weekData.push(dayData);
