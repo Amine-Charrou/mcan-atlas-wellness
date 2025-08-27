@@ -190,8 +190,8 @@ export function WeeklyHabitsView() {
           sleep: dayEntry?.sleep_hours || 0,
           activity: dayEntry?.activity_minutes || 0,
           mood: dayEntry?.mood || 'okay',
-          // Always use calculated day names for consistency with week structure
-          dayName: getLocalizedDayName(currentDate)
+          // Use database day_of_week (more accurate) if available, otherwise calculate
+          dayName: dayEntry?.day_of_week ? convertDbDayToShort(dayEntry.day_of_week) : getLocalizedDayName(currentDate)
         };
         
         weekData.push(dayData);
