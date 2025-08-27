@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Droplets, Moon, Activity, Smile, Plus, Minus, Check, Flame } from "lucide-react";
+import { Droplets, Moon, Activity, Smile, Plus, Minus, Check, Flame, Calendar, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { WeeklyHabitsView } from "./WeeklyHabitsView";
 
 interface HabitData {
   id: string;
@@ -26,11 +27,12 @@ export function HabitTracker() {
   const { t } = useLanguage();
   const { user } = useAuth();
   
-  const [mood, setMood] = useState(4);
+  const [mood, setMood] = useState<string>("good");
   const [entryId, setEntryId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [viewMode, setViewMode] = useState<"daily" | "weekly">("daily");
   
   const [habits, setHabits] = useState<HabitData[]>([
     {
@@ -72,6 +74,7 @@ export function HabitTracker() {
   ]);
 
   const moodLabels = ["😟", "😕", "😐", "😊", "😄"];
+  const moodValues = ["very_sad", "sad", "okay", "good", "excellent"];
   const moodDescriptions = [t.verySad, t.sad, t.okayMood, t.good, t.excellent];
 
   // Load today's data on component mount
@@ -81,6 +84,11 @@ export function HabitTracker() {
       calculateStreak();
     }
   }, [user]);
+
+  const getMoodIndex = (moodValue: string): number => {
+    const index = moodValues.indexOf(moodValue);
+    return index === -1 ? 3 : index; // Default to "good" if not found
+  };
 
   const loadTodaysData = async () => {
     if (!user) return;
@@ -98,7 +106,7 @@ export function HabitTracker() {
 
       if (data) {
         setEntryId(data.id);
-        setMood(data.mood || 4);
+        setMood(data.mood || "good");
         setHabits(prev => prev.map(habit => {
           switch (habit.id) {
             case 'water':
@@ -141,11 +149,11 @@ export function HabitTracker() {
         expectedDate.setDate(today.getDate() - i);
         
         if (entryDate.toISOString().split('T')[0] === expectedDate.toISOString().split('T')[0]) {
-          // Check if goals were met (at least 80% of each target)
+          // Check if goals were met (at least 75% of each target)
           const waterMet = (data![i].water_glasses || 0) >= 6; // 75% of 8
           const sleepMet = (data![i].sleep_hours || 0) >= 6; // 75% of 8  
           const activityMet = (data![i].activity_minutes || 0) >= 45; // 75% of 60
-          const moodGood = (data![i].mood || 0) >= 3; // At least neutral
+          const moodGood = ['okay', 'good', 'excellent'].includes(data![i].mood || 'okay');
           
           if (waterMet && sleepMet && activityMet && moodGood) {
             currentStreak++;
@@ -273,144 +281,177 @@ export function HabitTracker() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-primary mb-2">{t.habitTracker}</h1>
-          <p className="text-muted-foreground">{t.logDaily}</p>
+          <p className="text-muted-foreground">
+            {viewMode === "daily" ? t.logDaily : "Your progress over the past week"}
+          </p>
         </div>
-        {streak > 0 && (
-          <div className="flex items-center gap-2 bg-gradient-to-r from-moroccan-orange/10 to-primary/10 p-4 rounded-xl">
-            <Flame className="text-moroccan-orange" size={24} />
-            <div className="text-right">
-              <div className="text-2xl font-bold text-primary">{streak}</div>
-              <div className="text-sm text-muted-foreground">Day Streak</div>
-            </div>
+        
+        <div className="flex items-center gap-4">
+          {/* View Toggle */}
+          <div className="flex bg-muted rounded-lg p-1">
+            <Button
+              variant={viewMode === "daily" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("daily")}
+              className="flex items-center gap-2"
+            >
+              <Calendar size={16} />
+              Daily
+            </Button>
+            <Button
+              variant={viewMode === "weekly" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("weekly")}
+              className="flex items-center gap-2"
+            >
+              <BarChart3 size={16} />
+              Weekly
+            </Button>
           </div>
-        )}
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Mood Tracker */}
-        <div className="lg:col-span-1">
-          <Card className="p-6">
-            <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
-              <Smile className="text-moroccan-orange" size={24} />
-              {t.howMoodToday}
-            </h3>
-            
-            <div className="space-y-6">
-              <div className="grid grid-cols-5 gap-2">
-                {moodLabels.map((emoji, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setMood(index + 1)}
-                    className={`text-3xl p-3 rounded-xl transition-all ${
-                      mood === index + 1 
-                        ? "bg-moroccan-orange/20 scale-110 shadow-md" 
-                        : "hover:bg-muted"
-                    }`}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-              <div className="text-center">
-                <span className="text-lg font-medium text-moroccan-orange">
-                  {moodDescriptions[mood - 1]}
-                </span>
+          {/* Streak Counter */}
+          {streak > 0 && (
+            <div className="flex items-center gap-2 bg-gradient-to-r from-moroccan-orange/10 to-primary/10 p-3 rounded-xl">
+              <Flame className="text-moroccan-orange" size={20} />
+              <div className="text-right">
+                <div className="text-xl font-bold text-primary">{streak}</div>
+                <div className="text-xs text-muted-foreground">Day Streak</div>
               </div>
             </div>
-          </Card>
-        </div>
-
-        {/* Right Columns - Habit Tracking */}
-        <div className="lg:col-span-2 space-y-6">
-          {habits.map((habit) => {
-            const Icon = habit.icon;
-            const percentage = (habit.current / habit.target) * 100;
-            
-            return (
-              <Card key={habit.id} className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-full ${habit.bgColor}`}>
-                      <Icon size={24} className={habit.color} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold">{habit.name}</h3>
-                      <p className="text-muted-foreground">
-                        {t.target}: {habit.target} {habit.unit}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className={`text-2xl font-bold ${habit.color}`}>
-                      {habit.current}
-                    </span>
-                    <p className="text-sm text-muted-foreground">{habit.unit}</p>
-                  </div>
-                </div>
-
-                {/* Quick Action Buttons */}
-                <div className="flex items-center gap-4 mb-6">
-                  <Button
-                    variant="outline"
-                    onClick={() => quickAdd(habit.id, -1)}
-                    className="flex-shrink-0"
-                  >
-                    <Minus size={18} />
-                  </Button>
-                  
-                  <div className="flex-1">
-                    <Slider
-                      value={[habit.current]}
-                      onValueChange={([value]) => updateHabit(habit.id, value)}
-                      max={habit.max}
-                      min={habit.min}
-                      step={habit.id === "sleep" ? 0.5 : 1}
-                      className="w-full"
-                    />
-                  </div>
-                  
-                  <Button
-                    variant="outline"
-                    onClick={() => quickAdd(habit.id, 1)}
-                    className="flex-shrink-0"
-                  >
-                    <Plus size={18} />
-                  </Button>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="font-medium">{t.progress}</span>
-                    <span className={`font-bold ${habit.color}`}>
-                      {Math.round(percentage)}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-muted rounded-full h-3">
-                    <div
-                      className={`h-3 rounded-full transition-all duration-300 ${habit.bgColor.replace('/10', '/50')}`}
-                      style={{ width: `${Math.min(percentage, 100)}%` }}
-                    />
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-
-          {/* Save Button */}
-          <Button 
-            onClick={saveProgress}
-            disabled={isSaving}
-            className="w-full h-14 bg-primary hover:bg-primary-light text-lg font-semibold disabled:opacity-50"
-          >
-            <Check size={20} className="mr-2" />
-            {isSaving ? "Saving..." : t.saveTodaysProgress}
-          </Button>
+          )}
         </div>
       </div>
+
+      {/* Conditional Content */}
+      {viewMode === "weekly" ? (
+        <WeeklyHabitsView />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Mood Tracker */}
+          <div className="lg:col-span-1">
+            <Card className="p-6">
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
+                <Smile className="text-moroccan-orange" size={24} />
+                {t.howMoodToday}
+              </h3>
+              
+              <div className="space-y-6">
+                <div className="grid grid-cols-5 gap-2">
+                  {moodLabels.map((emoji, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setMood(moodValues[index])}
+                      className={`text-3xl p-3 rounded-xl transition-all ${
+                        mood === moodValues[index] 
+                          ? "bg-moroccan-orange/20 scale-110 shadow-md" 
+                          : "hover:bg-muted"
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+                <div className="text-center">
+                  <span className="text-lg font-medium text-moroccan-orange">
+                    {moodDescriptions[getMoodIndex(mood)]}
+                  </span>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Right Columns - Habit Tracking */}
+          <div className="lg:col-span-2 space-y-6">
+            {habits.map((habit) => {
+              const Icon = habit.icon;
+              const percentage = (habit.current / habit.target) * 100;
+              
+              return (
+                <Card key={habit.id} className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-3 rounded-full ${habit.bgColor}`}>
+                        <Icon size={24} className={habit.color} />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold">{habit.name}</h3>
+                        <p className="text-muted-foreground">
+                          {t.target}: {habit.target} {habit.unit}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-2xl font-bold ${habit.color}`}>
+                        {habit.current}
+                      </span>
+                      <p className="text-sm text-muted-foreground">{habit.unit}</p>
+                    </div>
+                  </div>
+
+                  {/* Quick Action Buttons */}
+                  <div className="flex items-center gap-4 mb-6">
+                    <Button
+                      variant="outline"
+                      onClick={() => quickAdd(habit.id, -1)}
+                      className="flex-shrink-0"
+                    >
+                      <Minus size={18} />
+                    </Button>
+                    
+                    <div className="flex-1">
+                      <Slider
+                        value={[habit.current]}
+                        onValueChange={([value]) => updateHabit(habit.id, value)}
+                        max={habit.max}
+                        min={habit.min}
+                        step={habit.id === "sleep" ? 0.5 : 1}
+                        className="w-full"
+                      />
+                    </div>
+                    
+                    <Button
+                      variant="outline"
+                      onClick={() => quickAdd(habit.id, 1)}
+                      className="flex-shrink-0"
+                    >
+                      <Plus size={18} />
+                    </Button>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="font-medium">{t.progress}</span>
+                      <span className={`font-bold ${habit.color}`}>
+                        {Math.round(percentage)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-muted rounded-full h-3">
+                      <div
+                        className={`h-3 rounded-full transition-all duration-300 ${habit.bgColor.replace('/10', '/50')}`}
+                        style={{ width: `${Math.min(percentage, 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
+
+            {/* Save Button */}
+            <Button 
+              onClick={saveProgress}
+              disabled={isSaving}
+              className="w-full h-14 bg-primary hover:bg-primary-light text-lg font-semibold disabled:opacity-50"
+            >
+              <Check size={20} className="mr-2" />
+              {isSaving ? "Saving..." : t.saveTodaysProgress}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
