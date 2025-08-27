@@ -23,7 +23,7 @@ interface MoodCount {
 
 export function WeeklyHabitsView() {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [moodData, setMoodData] = useState<MoodCount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,12 +36,19 @@ export function WeeklyHabitsView() {
     'excellent': '😄'
   };
 
-  const moodLabels: { [key: string]: string } = {
-    'very_sad': 'Very Sad',
-    'sad': 'Sad',
-    'okay': 'Okay',
-    'good': 'Good',
-    'excellent': 'Excellent'
+  const getMoodLabel = (moodKey: string): string => {
+    switch (moodKey) {
+      case 'very_sad': return t.verySad;
+      case 'sad': return t.sad;
+      case 'okay': return t.okayMood;
+      case 'good': return t.good;
+      case 'excellent': return t.excellent;
+      default: return t.okayMood;
+    }
+  };
+
+  const getLocalizedDayName = (date: Date): string => {
+    return date.toLocaleDateString(language, { weekday: 'short' });
   };
 
   useEffect(() => {
@@ -111,7 +118,7 @@ export function WeeklyHabitsView() {
           sleep: dayEntry?.sleep_hours || 0,
           activity: dayEntry?.activity_minutes || 0,
           mood: dayEntry?.mood || 'okay',
-          dayName: currentDate.toLocaleDateString('en', { weekday: 'short' })
+          dayName: getLocalizedDayName(currentDate)
         });
 
         // Count moods
@@ -123,7 +130,7 @@ export function WeeklyHabitsView() {
       
       // Convert mood counts to array
       const moodArray = Object.entries(moodCounts).map(([mood, count]) => ({
-        mood: moodLabels[mood] || mood,
+        mood: getMoodLabel(mood),
         count,
         emoji: moodEmojis[mood] || '😐'
       }));
@@ -139,7 +146,7 @@ export function WeeklyHabitsView() {
   if (isLoading) {
     return (
       <div className="max-w-6xl mx-auto p-8 text-center">
-        <div className="animate-pulse">Loading weekly data...</div>
+        <div className="animate-pulse">{t.loadingWeeklyData}</div>
       </div>
     );
   }
@@ -148,9 +155,9 @@ export function WeeklyHabitsView() {
     return (
       <div className="max-w-6xl mx-auto p-8 text-center">
         <Card className="p-8">
-          <h2 className="text-2xl font-bold mb-4">No Weekly Data</h2>
+          <h2 className="text-2xl font-bold mb-4">{t.noWeeklyData}</h2>
           <p className="text-muted-foreground">
-            Start tracking your daily habits to see weekly progress charts.
+            {t.startTrackingHabits}
           </p>
         </Card>
       </div>
@@ -160,8 +167,8 @@ export function WeeklyHabitsView() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">Weekly Progress</h1>
-        <p className="text-muted-foreground">Your habit trends over the past 7 days</p>
+        <h1 className="text-3xl font-bold text-primary mb-2">{t.weeklyProgress}</h1>
+        <p className="text-muted-foreground">{t.habitTrendsWeek}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -169,7 +176,7 @@ export function WeeklyHabitsView() {
         <Card className="p-6">
           <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
             <Droplets className="text-wellness-blue" size={24} />
-            Water Intake (Glasses)
+            {t.waterIntakeGlasses}
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={weeklyData}>
@@ -187,7 +194,7 @@ export function WeeklyHabitsView() {
             </LineChart>
           </ResponsiveContainer>
           <div className="mt-2 text-sm text-muted-foreground">
-            Target: 8 glasses per day
+            {t.targetGlassesDay}
           </div>
         </Card>
 
@@ -195,7 +202,7 @@ export function WeeklyHabitsView() {
         <Card className="p-6">
           <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
             <Moon className="text-primary" size={24} />
-            Sleep Hours
+            {t.sleepHours}
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={weeklyData}>
@@ -213,7 +220,7 @@ export function WeeklyHabitsView() {
             </LineChart>
           </ResponsiveContainer>
           <div className="mt-2 text-sm text-muted-foreground">
-            Target: 8 hours per day
+            {t.targetHoursDay}
           </div>
         </Card>
 
@@ -221,7 +228,7 @@ export function WeeklyHabitsView() {
         <Card className="p-6">
           <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
             <Activity className="text-wellness-green" size={24} />
-            Physical Activity (Minutes)
+            {t.physicalActivityMinutes}
           </h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={weeklyData}>
@@ -237,7 +244,7 @@ export function WeeklyHabitsView() {
             </BarChart>
           </ResponsiveContainer>
           <div className="mt-2 text-sm text-muted-foreground">
-            Target: 60 minutes per day
+            {t.targetMinutesDay}
           </div>
         </Card>
 
@@ -245,7 +252,7 @@ export function WeeklyHabitsView() {
         <Card className="p-6">
           <h3 className="text-xl font-semibold mb-4 flex items-center gap-3">
             <Smile className="text-moroccan-orange" size={24} />
-            Weekly Mood Distribution
+            {t.weeklyMoodDistribution}
           </h3>
           <div className="space-y-4">
             {moodData.map((item, index) => (
@@ -262,7 +269,7 @@ export function WeeklyHabitsView() {
                     />
                   </div>
                   <span className="text-sm font-semibold text-moroccan-orange">
-                    {item.count} day{item.count !== 1 ? 's' : ''}
+                    {item.count} {item.count === 1 ? t.day : t.days}
                   </span>
                 </div>
               </div>
@@ -273,33 +280,33 @@ export function WeeklyHabitsView() {
 
       {/* Weekly Summary */}
       <Card className="p-6">
-        <h3 className="text-xl font-semibold mb-4">Weekly Summary</h3>
+        <h3 className="text-xl font-semibold mb-4">{t.weeklySummary}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-2xl font-bold text-wellness-blue mb-1">
               {Math.round(weeklyData.reduce((sum, day) => sum + day.water, 0) / 7 * 10) / 10}
             </div>
-            <div className="text-sm text-muted-foreground">Avg. Glasses/Day</div>
+            <div className="text-sm text-muted-foreground">{t.avgGlassesDay}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              {Math.round((weeklyData.reduce((sum, day) => sum + day.water, 0) / 7 / 8) * 100)}% of target
+              {Math.round((weeklyData.reduce((sum, day) => sum + day.water, 0) / 7 / 8) * 100)}{t.ofTarget}
             </div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary mb-1">
               {Math.round(weeklyData.reduce((sum, day) => sum + day.sleep, 0) / 7 * 10) / 10}
             </div>
-            <div className="text-sm text-muted-foreground">Avg. Hours/Day</div>
+            <div className="text-sm text-muted-foreground">{t.avgHoursDay}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              {Math.round((weeklyData.reduce((sum, day) => sum + day.sleep, 0) / 7 / 8) * 100)}% of target
+              {Math.round((weeklyData.reduce((sum, day) => sum + day.sleep, 0) / 7 / 8) * 100)}{t.ofTarget}
             </div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-wellness-green mb-1">
               {Math.round(weeklyData.reduce((sum, day) => sum + day.activity, 0) / 7)}
             </div>
-            <div className="text-sm text-muted-foreground">Avg. Minutes/Day</div>
+            <div className="text-sm text-muted-foreground">{t.avgMinutesDay}</div>
             <div className="text-xs text-muted-foreground mt-1">
-              {Math.round((weeklyData.reduce((sum, day) => sum + day.activity, 0) / 7 / 60) * 100)}% of target
+              {Math.round((weeklyData.reduce((sum, day) => sum + day.activity, 0) / 7 / 60) * 100)}{t.ofTarget}
             </div>
           </div>
         </div>

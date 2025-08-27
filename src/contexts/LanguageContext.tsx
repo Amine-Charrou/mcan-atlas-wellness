@@ -88,6 +88,27 @@ interface Translation {
   // Progress saved
   progressSaved: string;
   progressSavedDesc: string;
+  
+  // Weekly view
+  weeklyProgress: string;
+  habitTrendsWeek: string;
+  waterIntakeGlasses: string;
+  sleepHours: string;
+  physicalActivityMinutes: string;
+  weeklyMoodDistribution: string;
+  weeklySummary: string;
+  avgGlassesDay: string;
+  avgHoursDay: string;
+  avgMinutesDay: string;
+  ofTarget: string;
+  day: string;
+  days: string;
+  noWeeklyData: string;
+  startTrackingHabits: string;
+  targetGlassesDay: string;
+  targetHoursDay: string;
+  targetMinutesDay: string;
+  loadingWeeklyData: string;
 }
 
 const translations: Record<Language, Translation> = {
@@ -177,6 +198,27 @@ const translations: Record<Language, Translation> = {
     // Progress saved
     progressSaved: "Progress Saved! 🎉",
     progressSavedDesc: "Your daily habits have been updated successfully.",
+    
+    // Weekly view
+    weeklyProgress: "Weekly Progress",
+    habitTrendsWeek: "Your habit trends over the past 7 days",
+    waterIntakeGlasses: "Water Intake (Glasses)",
+    sleepHours: "Sleep Hours",
+    physicalActivityMinutes: "Physical Activity (Minutes)",
+    weeklyMoodDistribution: "Weekly Mood Distribution",
+    weeklySummary: "Weekly Summary",
+    avgGlassesDay: "Avg. Glasses/Day",
+    avgHoursDay: "Avg. Hours/Day",
+    avgMinutesDay: "Avg. Minutes/Day",
+    ofTarget: "% of target",
+    day: "day",
+    days: "days",
+    noWeeklyData: "No Weekly Data",
+    startTrackingHabits: "Start tracking your daily habits to see weekly progress charts.",
+    targetGlassesDay: "Target: 8 glasses per day",
+    targetHoursDay: "Target: 8 hours per day",
+    targetMinutesDay: "Target: 60 minutes per day",
+    loadingWeeklyData: "Loading weekly data...",
   },
   fr: {
     // Dashboard
@@ -264,6 +306,27 @@ const translations: Record<Language, Translation> = {
     // Progress saved
     progressSaved: "Progrès sauvegardé ! 🎉",
     progressSavedDesc: "Vos habitudes quotidiennes ont été mises à jour avec succès.",
+    
+    // Weekly view
+    weeklyProgress: "Progrès hebdomadaire",
+    habitTrendsWeek: "Vos tendances d'habitudes au cours des 7 derniers jours",
+    waterIntakeGlasses: "Consommation d'eau (Verres)",
+    sleepHours: "Heures de sommeil",
+    physicalActivityMinutes: "Activité physique (Minutes)",
+    weeklyMoodDistribution: "Distribution hebdomadaire de l'humeur",
+    weeklySummary: "Résumé hebdomadaire",
+    avgGlassesDay: "Moy. Verres/Jour",
+    avgHoursDay: "Moy. Heures/Jour",
+    avgMinutesDay: "Moy. Minutes/Jour",
+    ofTarget: "% de l'objectif",
+    day: "jour",
+    days: "jours",
+    noWeeklyData: "Aucune donnée hebdomadaire",
+    startTrackingHabits: "Commencez à suivre vos habitudes quotidiennes pour voir les graphiques de progrès hebdomadaires.",
+    targetGlassesDay: "Objectif : 8 verres par jour",
+    targetHoursDay: "Objectif : 8 heures par jour",
+    targetMinutesDay: "Objectif : 60 minutes par jour",
+    loadingWeeklyData: "Chargement des données hebdomadaires...",
   },
   ar: {
     // Dashboard
@@ -351,6 +414,27 @@ const translations: Record<Language, Translation> = {
     // Progress saved
     progressSaved: "تم حفظ التقدم! 🎉",
     progressSavedDesc: "تم تحديث عاداتك اليومية بنجاح.",
+    
+    // Weekly view
+    weeklyProgress: "التقدم الأسبوعي",
+    habitTrendsWeek: "اتجاهات عاداتك خلال الـ 7 أيام الماضية",
+    waterIntakeGlasses: "شرب الماء (أكواب)",
+    sleepHours: "ساعات النوم",
+    physicalActivityMinutes: "النشاط البدني (دقائق)",
+    weeklyMoodDistribution: "توزيع المزاج الأسبوعي",
+    weeklySummary: "الملخص الأسبوعي",
+    avgGlassesDay: "متوسط أكواب/يوم",
+    avgHoursDay: "متوسط ساعات/يوم",
+    avgMinutesDay: "متوسط دقائق/يوم",
+    ofTarget: "% من الهدف",
+    day: "يوم",
+    days: "أيام",
+    noWeeklyData: "لا توجد بيانات أسبوعية",
+    startTrackingHabits: "ابدأ في تتبع عاداتك اليومية لرؤية مخططات التقدم الأسبوعي.",
+    targetGlassesDay: "الهدف: 8 أكواب يومياً",
+    targetHoursDay: "الهدف: 8 ساعات يومياً",
+    targetMinutesDay: "الهدف: 60 دقيقة يومياً",
+    loadingWeeklyData: "جار تحميل البيانات الأسبوعية...",
   },
 };
 
