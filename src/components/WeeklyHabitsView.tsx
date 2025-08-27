@@ -125,10 +125,18 @@ export function WeeklyHabitsView() {
     try {
       setIsLoading(true);
       
-      // Get last 7 days of data
-      const endDate = new Date();
-      const startDate = new Date();
-      startDate.setDate(endDate.getDate() - 6);
+      // Get current week from Monday to Sunday
+      const today = new Date();
+      const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+      const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Adjust for Monday start
+      
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() + mondayOffset);
+      startDate.setHours(0, 0, 0, 0);
+      
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      endDate.setHours(23, 59, 59, 999);
 
       const { data, error } = await supabase
         .from('habit_entries')
