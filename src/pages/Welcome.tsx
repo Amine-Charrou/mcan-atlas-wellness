@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, Activity, MessageCircle, Shield, Users, Sparkles } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import mcanLogo from "@/assets/mcan-logo.png";
 
 interface WelcomeProps {
   onNavigate: (page: string) => void;
@@ -166,9 +165,9 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
           <div className="mx-auto max-w-4xl">
             <div className="mb-8 flex justify-center">
               <img 
-                src={mcanLogo} 
+                src="/lovable-uploads/b08888ad-2807-4919-a00e-2fd1b123b8f9.png" 
                 alt="Mcan AI Health System Logo" 
-                className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg"
+                className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg object-contain"
               />
             </div>
             <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
