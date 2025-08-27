@@ -192,7 +192,11 @@ export function HabitTracker() {
   };
 
   const saveProgress = async () => {
+    console.log('🚀 Starting saveProgress function');
+    console.log('User:', user);
+    
     if (!user) {
+      console.log('❌ No user found, showing auth error');
       toast({
         title: "Authentication Required",
         description: "Please sign in to save your progress.",
@@ -202,6 +206,7 @@ export function HabitTracker() {
     }
 
     setIsSaving(true);
+    console.log('💾 Starting save process...');
     
     try {
       const today = new Date().toISOString().split('T')[0];
@@ -218,8 +223,12 @@ export function HabitTracker() {
         activity_minutes: Math.round(activityHabit?.current || 0),
       };
 
+      console.log('📊 Habit data to save:', habitData);
+      console.log('🔑 Entry ID:', entryId);
+
       let result;
       if (entryId) {
+        console.log('📝 Updating existing entry with ID:', entryId);
         // Update existing entry
         result = await supabase
           .from('habit_entries')
@@ -228,6 +237,7 @@ export function HabitTracker() {
           .select()
           .single();
       } else {
+        console.log('✨ Creating new entry');
         // Create new entry
         result = await supabase
           .from('habit_entries')
@@ -236,11 +246,18 @@ export function HabitTracker() {
           .single();
       }
 
-      if (result.error) throw result.error;
+      console.log('📋 Database result:', result);
 
+      if (result.error) {
+        console.error('❌ Database error:', result.error);
+        throw result.error;
+      }
+
+      console.log('✅ Save successful! Data:', result.data);
       setEntryId(result.data.id);
       await calculateStreak();
       
+      console.log('🎉 Progress saved successfully');
       toast({
         title: t.progressSaved,
         description: t.progressSavedDesc,
