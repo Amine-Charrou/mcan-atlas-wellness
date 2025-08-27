@@ -50,6 +50,31 @@ export function WeeklyHabitsView() {
     }
   }, [user]);
 
+  // Real-time subscription for habit entries updates
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('habit_entries_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'habit_entries',
+          filter: `user_id=eq.${user.id}`
+        },
+        () => {
+          loadWeeklyData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   const loadWeeklyData = async () => {
     if (!user) return;
 
