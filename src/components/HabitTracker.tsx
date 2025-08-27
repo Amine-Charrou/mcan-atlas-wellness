@@ -257,6 +257,26 @@ export function HabitTracker() {
       setEntryId(result.data.id);
       await calculateStreak();
       
+      // Trigger n8n webhook
+      try {
+        console.log('🌐 Triggering n8n webhook...');
+        await fetch('https://am3ji4.app.n8n.cloud/webhook-test/habit-tracker', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          mode: 'no-cors',
+          body: JSON.stringify({
+            ...habitData,
+            timestamp: new Date().toISOString(),
+            streak: streak,
+          }),
+        });
+        console.log('✅ Webhook triggered successfully');
+      } catch (webhookError) {
+        console.error('⚠️ Webhook error (non-critical):', webhookError);
+      }
+      
       console.log('🎉 Progress saved successfully');
       toast({
         title: t.progressSaved,
