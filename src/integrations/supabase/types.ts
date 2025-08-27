@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      habit_entries: {
+        Row: {
+          activity_minutes: number | null
+          created_at: string
+          date: string
+          id: string
+          mood: number | null
+          sleep_hours: number | null
+          updated_at: string
+          user_id: string
+          water_glasses: number | null
+        }
+        Insert: {
+          activity_minutes?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          mood?: number | null
+          sleep_hours?: number | null
+          updated_at?: string
+          user_id: string
+          water_glasses?: number | null
+        }
+        Update: {
+          activity_minutes?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          mood?: number | null
+          sleep_hours?: number | null
+          updated_at?: string
+          user_id?: string
+          water_glasses?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

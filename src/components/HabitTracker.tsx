@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { Droplets, Moon, Activity, Smile, Plus, Minus, Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Droplets, Moon, Activity, Smile, Plus, Minus, Check, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface HabitData {
   id: string;
@@ -22,13 +24,20 @@ interface HabitData {
 export function HabitTracker() {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { user } = useAuth();
+  
+  const [mood, setMood] = useState(4);
+  const [entryId, setEntryId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [streak, setStreak] = useState(0);
   
   const [habits, setHabits] = useState<HabitData[]>([
     {
       id: "water",
       name: t.waterIntake,
       icon: Droplets,
-      current: 6,
+      current: 0,
       target: 8,
       unit: t.glasses,
       color: "text-wellness-blue",
@@ -40,7 +49,7 @@ export function HabitTracker() {
       id: "sleep",
       name: t.sleep,
       icon: Moon,
-      current: 7.5,
+      current: 0,
       target: 8,
       unit: t.hours,
       color: "text-primary",
@@ -52,7 +61,7 @@ export function HabitTracker() {
       id: "activity",
       name: t.physicalActivity,
       icon: Activity,
-      current: 45,
+      current: 0,
       target: 60,
       unit: t.minutes,
       color: "text-wellness-green",
@@ -62,10 +71,97 @@ export function HabitTracker() {
     },
   ]);
 
-  const [mood, setMood] = useState(4);
-
   const moodLabels = ["😟", "😕", "😐", "😊", "😄"];
   const moodDescriptions = [t.verySad, t.sad, t.okayMood, t.good, t.excellent];
+
+  // Load today's data on component mount
+  useEffect(() => {
+    if (user) {
+      loadTodaysData();
+      calculateStreak();
+    }
+  }, [user]);
+
+  const loadTodaysData = async () => {
+    if (!user) return;
+    
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const { data, error } = await supabase
+        .from('habit_entries')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('date', today)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        setEntryId(data.id);
+        setMood(data.mood || 4);
+        setHabits(prev => prev.map(habit => {
+          switch (habit.id) {
+            case 'water':
+              return { ...habit, current: data.water_glasses || 0 };
+            case 'sleep':
+              return { ...habit, current: data.sleep_hours || 0 };
+            case 'activity':
+              return { ...habit, current: data.activity_minutes || 0 };
+            default:
+              return habit;
+          }
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading today\'s data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const calculateStreak = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('habit_entries')
+        .select('date, water_glasses, sleep_hours, activity_minutes, mood')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false })
+        .limit(30);
+
+      if (error) throw error;
+
+      let currentStreak = 0;
+      const today = new Date();
+      
+      for (let i = 0; i < (data?.length || 0); i++) {
+        const entryDate = new Date(data![i].date);
+        const expectedDate = new Date(today);
+        expectedDate.setDate(today.getDate() - i);
+        
+        if (entryDate.toISOString().split('T')[0] === expectedDate.toISOString().split('T')[0]) {
+          // Check if goals were met (at least 80% of each target)
+          const waterMet = (data![i].water_glasses || 0) >= 6; // 75% of 8
+          const sleepMet = (data![i].sleep_hours || 0) >= 6; // 75% of 8  
+          const activityMet = (data![i].activity_minutes || 0) >= 45; // 75% of 60
+          const moodGood = (data![i].mood || 0) >= 3; // At least neutral
+          
+          if (waterMet && sleepMet && activityMet && moodGood) {
+            currentStreak++;
+          } else {
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+      
+      setStreak(currentStreak);
+    } catch (error) {
+      console.error('Error calculating streak:', error);
+    }
+  };
 
   const updateHabit = (habitId: string, value: number) => {
     setHabits(prev =>
@@ -87,19 +183,110 @@ export function HabitTracker() {
     );
   };
 
-  const saveProgress = () => {
-    toast({
-      title: t.progressSaved,
-      description: t.progressSavedDesc,
-    });
+  const saveProgress = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to save your progress.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const waterHabit = habits.find(h => h.id === 'water');
+      const sleepHabit = habits.find(h => h.id === 'sleep');
+      const activityHabit = habits.find(h => h.id === 'activity');
+
+      const habitData = {
+        user_id: user.id,
+        date: today,
+        mood,
+        water_glasses: Math.round(waterHabit?.current || 0),
+        sleep_hours: sleepHabit?.current || 0,
+        activity_minutes: Math.round(activityHabit?.current || 0),
+      };
+
+      let result;
+      if (entryId) {
+        // Update existing entry
+        result = await supabase
+          .from('habit_entries')
+          .update(habitData)
+          .eq('id', entryId)
+          .select()
+          .single();
+      } else {
+        // Create new entry
+        result = await supabase
+          .from('habit_entries')
+          .insert(habitData)
+          .select()
+          .single();
+      }
+
+      if (result.error) throw result.error;
+
+      setEntryId(result.data.id);
+      await calculateStreak();
+      
+      toast({
+        title: t.progressSaved,
+        description: t.progressSavedDesc,
+      });
+    } catch (error) {
+      console.error('Error saving progress:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save progress. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl mx-auto p-8 text-center">
+        <div className="animate-pulse">Loading your habits...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="max-w-6xl mx-auto p-8 text-center">
+        <Card className="p-8">
+          <h2 className="text-2xl font-bold mb-4">Authentication Required</h2>
+          <p className="text-muted-foreground">
+            Please sign in to track your daily habits and view your progress.
+          </p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-primary mb-2">{t.habitTracker}</h1>
-        <p className="text-muted-foreground">{t.logDaily}</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-primary mb-2">{t.habitTracker}</h1>
+          <p className="text-muted-foreground">{t.logDaily}</p>
+        </div>
+        {streak > 0 && (
+          <div className="flex items-center gap-2 bg-gradient-to-r from-moroccan-orange/10 to-primary/10 p-4 rounded-xl">
+            <Flame className="text-moroccan-orange" size={24} />
+            <div className="text-right">
+              <div className="text-2xl font-bold text-primary">{streak}</div>
+              <div className="text-sm text-muted-foreground">Day Streak</div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -216,10 +403,11 @@ export function HabitTracker() {
           {/* Save Button */}
           <Button 
             onClick={saveProgress}
-            className="w-full h-14 bg-primary hover:bg-primary-light text-lg font-semibold"
+            disabled={isSaving}
+            className="w-full h-14 bg-primary hover:bg-primary-light text-lg font-semibold disabled:opacity-50"
           >
             <Check size={20} className="mr-2" />
-            {t.saveTodaysProgress}
+            {isSaving ? "Saving..." : t.saveTodaysProgress}
           </Button>
         </div>
       </div>
