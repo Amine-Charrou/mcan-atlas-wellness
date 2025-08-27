@@ -182,9 +182,11 @@ export function WeeklyHabitsView() {
         
         weekData.push(dayData);
 
-        // Count moods for distribution
-        const mood = dayEntry?.mood || 'okay';
-        moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+        // Count moods for distribution - only count actual entries, not default values
+        if (dayEntry?.mood) {
+          const mood = dayEntry.mood;
+          moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+        }
       }
       
       // Ensure we have exactly 7 days in correct order (Mon-Sun)
