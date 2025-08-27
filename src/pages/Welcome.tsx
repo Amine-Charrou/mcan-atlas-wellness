@@ -158,10 +158,15 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
   const t = content[language as keyof typeof content];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20 moroccan-pattern">
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-grid-16 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+        
+        {/* Moroccan decorative elements */}
+        <div className="absolute top-10 left-10 w-20 h-20 border-2 border-moroccan-gold/30 rotate-45 animate-pulse"></div>
+        <div className="absolute bottom-20 right-16 w-16 h-16 border-2 border-moroccan-terracotta/30 rotate-12 animate-bounce" style={{animationDelay: '1s'}}></div>
+        
         <div className="relative container mx-auto px-6 py-20 text-center">
           <div className="mx-auto max-w-4xl">
             {/* Floating Dynamic Icons */}
@@ -187,13 +192,13 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
                 className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg object-contain hover-scale"
               />
             </div>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent animate-fade-in">
+            <h1 className={`mb-6 text-4xl font-bold tracking-tight md:text-6xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent animate-fade-in ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>
               {t.title}
             </h1>
-            <p className="mb-4 text-xl text-muted-foreground md:text-2xl font-medium">
+            <p className={`mb-4 text-xl text-muted-foreground md:text-2xl font-medium animate-fade-in ${language === 'ar' ? 'arabic-text font-amiri' : ''}`} style={{animationDelay: '0.1s'}}>
               {t.subtitle}
             </p>
-            <p className="mb-8 text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
+            <p className={`mb-8 text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in ${language === 'ar' ? 'arabic-text font-amiri' : ''}`} style={{animationDelay: '0.2s'}}>
               {t.description}
             </p>
             
@@ -208,11 +213,11 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{animationDelay: '0.6s'}}>
-              <Button size="lg" onClick={() => onNavigate('auth')} className="text-lg px-8 py-6 hover-scale">
+              <Button size="lg" onClick={() => onNavigate('auth')} className="text-lg px-8 py-6 hover-scale bg-gradient-to-r from-moroccan-orange to-moroccan-red hover:from-moroccan-red hover:to-moroccan-orange">
                 <Sparkles className="w-5 h-5 mr-2 animate-pulse" />
                 {t.getStarted}
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6 hover-scale">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6 hover-scale moroccan-border">
                 {t.learnMore}
               </Button>
             </div>
@@ -223,19 +228,19 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
       {/* Features Section */}
       <div className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">{t.features.title}</h2>
+          <h2 className={`text-3xl font-bold mb-4 ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>{t.features.title}</h2>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {t.features.items.map((feature, index) => (
-            <Card key={index} className="border-border/50 hover:border-primary/20 transition-colors hover-scale animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
+            <Card key={index} className="border-border/50 hover:border-moroccan-gold/50 transition-colors hover-scale animate-fade-in bg-gradient-to-br from-card to-card/90" style={{animationDelay: `${index * 0.1}s`}}>
               <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 hover-scale">
-                  <feature.icon className="w-6 h-6 text-primary animate-pulse" style={{animationDelay: `${index * 0.2}s`}} />
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-moroccan-gold/20 to-moroccan-orange/20 flex items-center justify-center mb-4 hover-scale">
+                  <feature.icon className="w-6 h-6 text-moroccan-orange animate-pulse" style={{animationDelay: `${index * 0.2}s`}} />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className={`text-xl ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-base leading-relaxed">
+                <CardDescription className={`text-base leading-relaxed ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>
                   {feature.description}
                 </CardDescription>
               </CardContent>
@@ -246,15 +251,15 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
 
       {/* CTA Section */}
       <div className="container mx-auto px-6 py-20">
-        <Card className="max-w-4xl mx-auto text-center bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+        <Card className="max-w-4xl mx-auto text-center bg-gradient-to-r from-moroccan-gold/10 via-moroccan-orange/5 to-moroccan-terracotta/10 border-moroccan-gold/30 moroccan-pattern">
           <CardHeader className="pb-8">
-            <CardTitle className="text-3xl mb-4">{t.cta.title}</CardTitle>
-            <CardDescription className="text-lg max-w-2xl mx-auto">
+            <CardTitle className={`text-3xl mb-4 ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>{t.cta.title}</CardTitle>
+            <CardDescription className={`text-lg max-w-2xl mx-auto ${language === 'ar' ? 'arabic-text font-amiri' : ''}`}>
               {t.cta.description}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button size="lg" onClick={() => onNavigate('auth')} className="text-lg px-8 py-6">
+            <Button size="lg" onClick={() => onNavigate('auth')} className="text-lg px-8 py-6 bg-gradient-to-r from-moroccan-orange to-moroccan-red hover:from-moroccan-red hover:to-moroccan-orange hover-scale">
               {t.cta.button}
             </Button>
           </CardContent>

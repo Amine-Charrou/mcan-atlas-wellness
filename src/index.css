@@ -118,3 +118,64 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* Moroccan geometric patterns */
+  .moroccan-pattern {
+    background-image: 
+      radial-gradient(circle at 25% 25%, hsl(var(--moroccan-gold) / 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, hsl(var(--moroccan-terracotta) / 0.1) 0%, transparent 50%);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+  }
+  
+  .moroccan-border {
+    border-image: linear-gradient(45deg, 
+      hsl(var(--moroccan-gold)), 
+      hsl(var(--moroccan-orange)), 
+      hsl(var(--moroccan-red))
+    ) 1;
+    border-width: 2px;
+    border-style: solid;
+  }
+  
+  .arabic-text {
+    font-family: 'Amiri', 'Scheherazade New', serif;
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
