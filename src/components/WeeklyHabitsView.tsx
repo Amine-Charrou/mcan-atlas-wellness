@@ -71,7 +71,8 @@ export function WeeklyHabitsView() {
           table: 'habit_entries',
           filter: `user_id=eq.${user.id}`
         },
-        () => {
+        (payload) => {
+          console.log('Real-time update received:', payload);
           loadWeeklyData();
         }
       )
@@ -86,6 +87,8 @@ export function WeeklyHabitsView() {
     if (!user) return;
 
     try {
+      setIsLoading(true);
+      
       // Get last 7 days of data
       const endDate = new Date();
       const startDate = new Date();
@@ -101,7 +104,9 @@ export function WeeklyHabitsView() {
 
       if (error) throw error;
 
-      // Create array for all 7 days
+      console.log('Weekly data loaded:', data);
+
+      // Create array for all 7 days with dynamic data
       const weekData: WeeklyData[] = [];
       const moodCounts: { [key: string]: number } = {};
       
@@ -121,14 +126,14 @@ export function WeeklyHabitsView() {
           dayName: getLocalizedDayName(currentDate)
         });
 
-        // Count moods
+        // Count moods dynamically
         const mood = dayEntry?.mood || 'okay';
         moodCounts[mood] = (moodCounts[mood] || 0) + 1;
       }
 
       setWeeklyData(weekData);
       
-      // Convert mood counts to array
+      // Convert mood counts to array with proper labels
       const moodArray = Object.entries(moodCounts).map(([mood, count]) => ({
         mood: getMoodLabel(mood),
         count,
@@ -136,6 +141,7 @@ export function WeeklyHabitsView() {
       }));
       
       setMoodData(moodArray);
+      console.log('Weekly data processed:', { weekData, moodArray });
     } catch (error) {
       console.error('Error loading weekly data:', error);
     } finally {
@@ -278,39 +284,62 @@ export function WeeklyHabitsView() {
         </Card>
       </div>
 
-      {/* Weekly Summary */}
-      <Card className="p-6">
-        <h3 className="text-xl font-semibold mb-4">{t.weeklySummary}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-wellness-blue mb-1">
-              {Math.round(weeklyData.reduce((sum, day) => sum + day.water, 0) / 7 * 10) / 10}
+        {/* Weekly Summary - Dynamic calculations */}
+        <Card className="p-6">
+          <h3 className="text-xl font-semibold mb-4">{t.weeklySummary}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-wellness-blue mb-1">
+                {weeklyData.length > 0 ? (Math.round(weeklyData.reduce((sum, day) => sum + day.water, 0) / weeklyData.length * 10) / 10) : 0}
+              </div>
+              <div className="text-sm text-muted-foreground">{t.avgGlassesDay}</div>
+              <div className="text-xs text-muted-foreground mt-1">
+                {weeklyData.length > 0 ? Math.round((weeklyData.reduce((sum, day) => sum + day.water, 0) / weeklyData.length / 8) * 100) : 0}{t.ofTarget}
+              </div>
             </div>
-            <div className="text-sm text-muted-foreground">{t.avgGlassesDay}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {Math.round((weeklyData.reduce((sum, day) => sum + day.water, 0) / 7 / 8) * 100)}{t.ofTarget}
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary mb-1">
+                {weeklyData.length > 0 ? (Math.round(weeklyData.reduce((sum, day) => sum + day.sleep, 0) / weeklyData.length * 10) / 10) : 0}
+              </div>
+              <div className="text-sm text-muted-foreground">{t.avgHoursDay}</div>
+              <div className="text-xs text-muted-foreground mt-1">
+                {weeklyData.length > 0 ? Math.round((weeklyData.reduce((sum, day) => sum + day.sleep, 0) / weeklyData.length / 8) * 100) : 0}{t.ofTarget}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-wellness-green mb-1">
+                {weeklyData.length > 0 ? Math.round(weeklyData.reduce((sum, day) => sum + day.activity, 0) / weeklyData.length) : 0}
+              </div>
+              <div className="text-sm text-muted-foreground">{t.avgMinutesDay}</div>
+              <div className="text-xs text-muted-foreground mt-1">
+                {weeklyData.length > 0 ? Math.round((weeklyData.reduce((sum, day) => sum + day.activity, 0) / weeklyData.length / 60) * 100) : 0}{t.ofTarget}
+              </div>
             </div>
           </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-primary mb-1">
-              {Math.round(weeklyData.reduce((sum, day) => sum + day.sleep, 0) / 7 * 10) / 10}
-            </div>
-            <div className="text-sm text-muted-foreground">{t.avgHoursDay}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {Math.round((weeklyData.reduce((sum, day) => sum + day.sleep, 0) / 7 / 8) * 100)}{t.ofTarget}
+          
+          {/* Weekly insights */}
+          <div className="mt-6 pt-6 border-t">
+            <h4 className="text-lg font-semibold mb-3">Weekly Insights</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-wellness-blue/10 p-4 rounded-lg">
+                <h5 className="font-medium text-wellness-blue mb-2">Hydration Trend</h5>
+                <p className="text-sm text-muted-foreground">
+                  {weeklyData.length > 0 && weeklyData.reduce((sum, day) => sum + day.water, 0) / weeklyData.length >= 6 
+                    ? "Great hydration habits! Keep it up!" 
+                    : "Try to drink more water daily for better health."}
+                </p>
+              </div>
+              <div className="bg-wellness-green/10 p-4 rounded-lg">
+                <h5 className="font-medium text-wellness-green mb-2">Activity Level</h5>
+                <p className="text-sm text-muted-foreground">
+                  {weeklyData.length > 0 && weeklyData.reduce((sum, day) => sum + day.activity, 0) / weeklyData.length >= 30
+                    ? "Excellent activity levels this week!"
+                    : "Consider adding more physical activity to your routine."}
+                </p>
+              </div>
             </div>
           </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-wellness-green mb-1">
-              {Math.round(weeklyData.reduce((sum, day) => sum + day.activity, 0) / 7)}
-            </div>
-            <div className="text-sm text-muted-foreground">{t.avgMinutesDay}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {Math.round((weeklyData.reduce((sum, day) => sum + day.activity, 0) / 7 / 60) * 100)}{t.ofTarget}
-            </div>
-          </div>
-        </div>
-      </Card>
+        </Card>
     </div>
   );
 }
