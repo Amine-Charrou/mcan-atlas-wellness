@@ -7,7 +7,22 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeScreen, onScreenChange }: SidebarProps) {
-  const { t } = useLanguage();
+  // Add fallback for when context is not available
+  let t;
+  try {
+    const context = useLanguage();
+    t = context.t;
+  } catch (error) {
+    console.warn('LanguageProvider not available, using fallback translations');
+    // Fallback translations
+    t = {
+      dashboard: "Dashboard",
+      chat: "Chat", 
+      habits: "Habits",
+      mentalHealth: "Mental Health",
+      settings: "Settings"
+    };
+  }
   
   const navItems = [
     { id: "dashboard", icon: Home, label: t.dashboard },

@@ -483,6 +483,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
+    console.error('useLanguage called outside LanguageProvider. Current context:', context);
+    console.error('This usually means a component is trying to use useLanguage before the provider is mounted.');
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
