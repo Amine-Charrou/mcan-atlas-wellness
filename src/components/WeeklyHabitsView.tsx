@@ -94,6 +94,19 @@ export function WeeklyHabitsView() {
     }
   };
 
+  const convertDbDayToShort = (dbDay: string): string => {
+    const dayMap: { [key: string]: string } = {
+      'Monday': 'Mon',
+      'Tuesday': 'Tue', 
+      'Wednesday': 'Wed',
+      'Thursday': 'Thu',
+      'Friday': 'Fri',
+      'Saturday': 'Sat',
+      'Sunday': 'Sun'
+    };
+    return dayMap[dbDay?.trim()] || dbDay?.substring(0, 3) || 'Mon';
+  };
+
   useEffect(() => {
     if (user) {
       loadWeeklyData();
@@ -177,7 +190,8 @@ export function WeeklyHabitsView() {
           sleep: dayEntry?.sleep_hours || 0,
           activity: dayEntry?.activity_minutes || 0,
           mood: dayEntry?.mood || 'okay',
-          dayName: getLocalizedDayName(currentDate)
+          // Use database day_of_week if available (more accurate), otherwise calculate
+          dayName: dayEntry?.day_of_week ? convertDbDayToShort(dayEntry.day_of_week) : getLocalizedDayName(currentDate)
         };
         
         weekData.push(dayData);
