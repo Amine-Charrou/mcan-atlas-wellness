@@ -14,7 +14,26 @@ interface Message {
 }
 
 export function ChatAssistant() {
-  const { t } = useLanguage();
+  // Add fallback for when context is not available
+  let t;
+  try {
+    const context = useLanguage();
+    t = context.t;
+  } catch (error) {
+    console.warn('LanguageProvider not available in ChatAssistant, using fallback translations');
+    // Fallback translations
+    t = {
+      aiChatAssistant: "AI Chat Assistant",
+      personalizedWellness: "Get personalized wellness guidance with Moroccan cultural insights",
+      howFeeling: "How are you feeling?",
+      typeMessage: "Type your message...",
+      helpful: "Helpful",
+      notHelpful: "Not helpful",
+      happy: "Happy",
+      okay: "Okay",
+      notGreat: "Not great"
+    };
+  }
   
   const [messages, setMessages] = useState<Message[]>([
     {

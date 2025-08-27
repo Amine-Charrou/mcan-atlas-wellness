@@ -23,7 +23,43 @@ interface MoodCount {
 
 export function WeeklyHabitsView() {
   const { user } = useAuth();
-  const { t, language } = useLanguage();
+  
+  // Add fallback for when context is not available
+  let t, language = 'en';
+  try {
+    const context = useLanguage();
+    t = context.t;
+    language = context.language;
+  } catch (error) {
+    console.warn('LanguageProvider not available in WeeklyHabitsView, using fallback translations');
+    // Fallback translations
+    t = {
+      weeklyProgress: "Weekly Progress",
+      habitTrendsWeek: "Your habit trends over the past 7 days",
+      waterIntakeGlasses: "Water Intake (Glasses)",
+      sleepHours: "Sleep Hours",
+      physicalActivityMinutes: "Physical Activity (Minutes)",
+      weeklyMoodDistribution: "Weekly Mood Distribution",
+      weeklySummary: "Weekly Summary",
+      avgGlassesDay: "Avg. Glasses/Day",
+      avgHoursDay: "Avg. Hours/Day",
+      avgMinutesDay: "Avg. Minutes/Day",
+      ofTarget: "% of target",
+      day: "day",
+      days: "days",
+      noWeeklyData: "No Weekly Data",
+      startTrackingHabits: "Start tracking your daily habits to see weekly progress charts.",
+      targetGlassesDay: "Target: 8 glasses per day",
+      targetHoursDay: "Target: 8 hours per day",
+      targetMinutesDay: "Target: 60 minutes per day",
+      loadingWeeklyData: "Loading weekly data...",
+      verySad: "Very sad",
+      sad: "Sad",
+      okayMood: "Okay",
+      good: "Good",
+      excellent: "Excellent"
+    };
+  }
   const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
   const [moodData, setMoodData] = useState<MoodCount[]>([]);
   const [isLoading, setIsLoading] = useState(true);

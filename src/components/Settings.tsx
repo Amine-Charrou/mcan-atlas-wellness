@@ -18,8 +18,49 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export function Settings() {
   const { toast } = useToast();
-  const { language, setLanguage, t } = useLanguage();
   const { signOut, user } = useAuth();
+  
+  // Add fallback for when context is not available
+  let language = 'en';
+  let setLanguage = (lang: string) => {
+    console.warn('setLanguage called but LanguageProvider not available');
+  };
+  let t;
+  try {
+    const context = useLanguage();
+    language = context.language;
+    setLanguage = context.setLanguage;
+    t = context.t;
+  } catch (error) {
+    console.warn('LanguageProvider not available in Settings, using fallback translations');
+    // Fallback translations
+    t = {
+      settingsTitle: "Settings",
+      customizeExperience: "Customize your Mcan experience",
+      welcomeUser: "Welcome, User!",
+      memberSince: "Member since",
+      wellnessWarrior: "🏆 Wellness Warrior Level",
+      mcanAI: "Mcan",
+      aiPoweredAssistant: "AI-Powered Health Assistant",
+      version: "Version 1.0.0 • Built with ❤️ in Morocco",
+      builtWithLove: "Health is a crown on healthy heads, seen only by the sick",
+      languageLabel: "Language",
+      notifications: "Notifications",
+      habitReminders: "Habit Reminders",
+      dailyWellnessCheckins: "Daily wellness check-ins",
+      moroccanWisdomHealth: "Moroccan wisdom & health advice",
+      achievementAlerts: "Achievement Alerts",
+      celebrateMilestones: "Celebrate your milestones",
+      account: "Account",
+      editProfile: "Edit Profile",
+      privacySettings: "Privacy Settings",
+      support: "Support",
+      helpFAQ: "Help & FAQ",
+      signOut: "Sign Out",
+      languageUpdated: "Language Updated",
+      languageChangedTo: "Language changed to"
+    };
+  }
   const [notifications, setNotifications] = useState({
     reminders: true,
     tips: true,

@@ -24,8 +24,40 @@ interface HabitData {
 
 export function HabitTracker() {
   const { toast } = useToast();
-  const { t } = useLanguage();
   const { user } = useAuth();
+  
+  // Add fallback for when context is not available
+  let t;
+  try {
+    const context = useLanguage();
+    t = context.t;
+  } catch (error) {
+    console.warn('LanguageProvider not available in HabitTracker, using fallback translations');
+    // Fallback translations
+    t = {
+      waterIntake: "Water Intake",
+      sleep: "Sleep",
+      physicalActivity: "Physical Activity",
+      glasses: "glasses",
+      hours: "hours",
+      minutes: "minutes",
+      habitTracker: "Habit Tracker",
+      logDaily: "Log your daily wellness activities and track progress",
+      howMoodToday: "How's your mood today?",
+      target: "Target",
+      progress: "Progress",
+      saveTodaysProgress: "Save Today's Progress",
+      verySad: "Very sad",
+      sad: "Sad",
+      okayMood: "Okay",
+      good: "Good",
+      excellent: "Excellent",
+      progressSaved: "Progress Saved! 🎉",
+      progressSavedDesc: "Your daily habits have been updated successfully.",
+      daily: "Daily",
+      weekly: "Weekly"
+    };
+  }
   
   const [mood, setMood] = useState<string>("good");
   const [entryId, setEntryId] = useState<string | null>(null);

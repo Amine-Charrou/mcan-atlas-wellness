@@ -14,7 +14,23 @@ interface Tip {
 }
 
 export function MentalHealthTips() {
-  const { t } = useLanguage();
+  // Add fallback for when context is not available
+  let t;
+  try {
+    const context = useLanguage();
+    t = context.t;
+  } catch (error) {
+    console.warn('LanguageProvider not available in MentalHealthTips, using fallback translations');
+    // Fallback translations
+    t = {
+      mentalHealthTips: "Mental Health Tips",
+      wellnessTips: "Wellness Tips",
+      stressRelief: "Stress Relief",
+      anxietyManagement: "Anxiety Management",
+      burnoutPrevention: "Burnout Prevention",
+      emotionalWellness: "Emotional Wellness"
+    };
+  }
   const [selectedCategory, setSelectedCategory] = useState<string>("stress");
 
   const categories = [

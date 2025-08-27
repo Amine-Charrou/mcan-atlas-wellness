@@ -9,7 +9,29 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
-  const { t } = useLanguage();
+  // Add fallback for when context is not available
+  let t;
+  try {
+    const context = useLanguage();
+    t = context.t;
+  } catch (error) {
+    console.warn('LanguageProvider not available in Dashboard, using fallback translations');
+    // Fallback translations
+    t = {
+      welcomeBack: "Welcome back!",
+      dailyInspiration: "Daily Inspiration",
+      quickActions: "Quick Actions", 
+      chatWithMcan: "Chat with Mcan AI",
+      logYourHabits: "Log Your Habits",
+      todaysProgress: "Today's Progress",
+      waterIntake: "Water Intake",
+      sleep: "Sleep",
+      physicalActivity: "Physical Activity",
+      glasses: "glasses",
+      hours: "hours", 
+      minutes: "minutes"
+    };
+  }
   
   const habits = [
     {
