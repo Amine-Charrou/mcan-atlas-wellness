@@ -84,7 +84,14 @@ export function WeeklyHabitsView() {
   };
 
   const getLocalizedDayName = (date: Date): string => {
-    return date.toLocaleDateString(language, { weekday: 'short' });
+    // Use proper locale codes and handle Arabic specifically
+    const locale = language === 'ar' ? 'ar-SA' : language === 'fr' ? 'fr-FR' : 'en-US';
+    try {
+      return date.toLocaleDateString(locale, { weekday: 'short' });
+    } catch (error) {
+      // Fallback to English if locale is not supported
+      return date.toLocaleDateString('en-US', { weekday: 'short' });
+    }
   };
 
   useEffect(() => {
@@ -182,6 +189,11 @@ export function WeeklyHabitsView() {
       
       // Ensure we have exactly 7 days in correct order (Mon-Sun)
       console.log('Week structure:', weekData.map(d => ({ day: d.dayName, date: d.date, hasData: d.water > 0 || d.sleep > 0 || d.activity > 0 })));
+      
+      // Validate that we always have exactly 7 days
+      if (weekData.length !== 7) {
+        console.error('Week data should have exactly 7 days, got:', weekData.length);
+      }
 
       setWeeklyData(weekData);
       
@@ -293,7 +305,21 @@ export function WeeklyHabitsView() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="dayName" />
               <YAxis />
-              <Tooltip />
+              <Tooltip 
+                labelFormatter={(label, payload) => {
+                  if (payload && payload[0]) {
+                    const dayData = payload[0].payload as WeeklyData;
+                    return `${label} (${dayData.date})`;
+                  }
+                  return label;
+                }}
+                formatter={(value: number, name: string) => {
+                  if (value === 0) {
+                    return ['No activity recorded', name];
+                  }
+                  return [`${value} minutes`, name];
+                }}
+              />
               <Bar 
                 dataKey="activity" 
                 fill="hsl(var(--wellness-green) / 0.8)" 
@@ -301,8 +327,25 @@ export function WeeklyHabitsView() {
               />
             </BarChart>
           </ResponsiveContainer>
-          <div className="mt-2 text-sm text-muted-foreground">
-            {t.targetMinutesDay}
+          <div className="mt-4">
+            <div className="text-sm text-muted-foreground mb-2">
+              {t.targetMinutesDay}
+            </div>
+            {/* Show missed days */}
+            <div className="flex flex-wrap gap-1">
+              {weeklyData.map((day, index) => (
+                <span
+                  key={index}
+                  className={`px-2 py-1 rounded-full text-xs ${
+                    day.activity === 0
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                      : 'bg-wellness-green/20 text-wellness-green'
+                  }`}
+                >
+                  {day.dayName}: {day.activity}min
+                </span>
+              ))}
+            </div>
           </div>
         </Card>
 
