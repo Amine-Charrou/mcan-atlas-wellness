@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Activity, MessageCircle, Shield, Users, Sparkles } from "lucide-react";
+import { Heart, Activity, MessageCircle, Shield, Users, Sparkles, Zap, Brain, Radio } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import aiCompanion from "@/assets/ai-companion.png";
 
 interface WelcomeProps {
   onNavigate: (page: string) => void;
@@ -163,27 +164,55 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-grid-16 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
         <div className="relative container mx-auto px-6 py-20 text-center">
           <div className="mx-auto max-w-4xl">
+            {/* Floating Dynamic Icons */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-20 left-10 animate-pulse">
+                <Heart className="w-8 h-8 text-primary/30" />
+              </div>
+              <div className="absolute top-32 right-16 animate-bounce">
+                <Zap className="w-6 h-6 text-accent/40" />
+              </div>
+              <div className="absolute bottom-40 left-20 animate-pulse" style={{animationDelay: '1s'}}>
+                <Brain className="w-7 h-7 text-primary/25" />
+              </div>
+              <div className="absolute bottom-60 right-12 animate-bounce" style={{animationDelay: '0.5s'}}>
+                <Radio className="w-5 h-5 text-accent/35" />
+              </div>
+            </div>
+            
             <div className="mb-8 flex justify-center">
               <img 
                 src="/mcan-logo.png" 
                 alt="Mcan AI Health System Logo" 
-                className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg object-contain"
+                className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg object-contain hover-scale"
               />
             </div>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent animate-fade-in">
               {t.title}
             </h1>
             <p className="mb-4 text-xl text-muted-foreground md:text-2xl font-medium">
               {t.subtitle}
             </p>
-            <p className="mb-8 text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="mb-8 text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.2s'}}>
               {t.description}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={() => onNavigate('auth')} className="text-lg px-8 py-6">
+            
+            {/* AI Companion Image */}
+            <div className="mb-8 flex justify-center">
+              <img 
+                src={aiCompanion}
+                alt="AI Health Companion" 
+                className="w-48 h-48 md:w-64 md:h-64 object-contain animate-scale-in hover-scale"
+                style={{animationDelay: '0.4s'}}
+              />
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{animationDelay: '0.6s'}}>
+              <Button size="lg" onClick={() => onNavigate('auth')} className="text-lg px-8 py-6 hover-scale">
+                <Sparkles className="w-5 h-5 mr-2 animate-pulse" />
                 {t.getStarted}
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6 hover-scale">
                 {t.learnMore}
               </Button>
             </div>
@@ -198,10 +227,10 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {t.features.items.map((feature, index) => (
-            <Card key={index} className="border-border/50 hover:border-primary/20 transition-colors">
+            <Card key={index} className="border-border/50 hover:border-primary/20 transition-colors hover-scale animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
               <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 hover-scale">
+                  <feature.icon className="w-6 h-6 text-primary animate-pulse" style={{animationDelay: `${index * 0.2}s`}} />
                 </div>
                 <CardTitle className="text-xl">{feature.title}</CardTitle>
               </CardHeader>
