@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart, Activity, MessageCircle, Shield, Users, Sparkles, Zap, Brain, Radio, Globe, Quote } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import aiCompanion from "@/assets/moroccan-ai-companion.png";
+import aiCompanion from "@/assets/ai-companion.png";
 
 interface WelcomeProps {
   onNavigate: (page: string) => void;
@@ -244,33 +244,14 @@ export const Welcome = ({ onNavigate }: WelcomeProps) => {
               </Card>
             </div>
             
-            {/* Dynamic AI Companion Image */}
-            <div className="mb-8 flex justify-center relative">
-              <div className="relative group">
-                {/* Floating glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-moroccan-gold/20 to-moroccan-orange/20 rounded-full blur-xl animate-pulse"></div>
-                
-                {/* Main image with dynamic effects */}
-                <img 
-                  src={aiCompanion}
-                  alt="AI Health Companion" 
-                  className="relative w-48 h-48 md:w-64 md:h-64 object-contain animate-scale-in hover-scale drop-shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-2"
-                  style={{animationDelay: '0.4s'}}
-                />
-                
-                {/* Orbiting elements */}
-                <div className="absolute inset-0 animate-spin" style={{animationDuration: '20s'}}>
-                  <div className="absolute top-4 left-1/2 w-3 h-3 bg-moroccan-gold/60 rounded-full animate-pulse"></div>
-                  <div className="absolute bottom-4 right-1/2 w-2 h-2 bg-moroccan-orange/60 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-                </div>
-                
-                {/* Floating particles */}
-                <div className="absolute inset-0 pointer-events-none">
-                  <div className="absolute top-8 right-8 w-1.5 h-1.5 bg-moroccan-terracotta/50 rounded-full animate-bounce" style={{animationDelay: '1s', animationDuration: '2s'}}></div>
-                  <div className="absolute bottom-12 left-6 w-1 h-1 bg-moroccan-gold/60 rounded-full animate-bounce" style={{animationDelay: '1.5s', animationDuration: '2.5s'}}></div>
-                  <div className="absolute top-16 left-12 w-1.5 h-1.5 bg-moroccan-orange/40 rounded-full animate-bounce" style={{animationDelay: '2s', animationDuration: '3s'}}></div>
-                </div>
-              </div>
+            {/* AI Companion Image */}
+            <div className="mb-8 flex justify-center">
+              <img 
+                src={aiCompanion}
+                alt="AI Health Companion" 
+                className="w-48 h-48 md:w-64 md:h-64 object-contain animate-scale-in hover-scale"
+                style={{animationDelay: '0.4s'}}
+              />
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{animationDelay: '0.6s'}}>
