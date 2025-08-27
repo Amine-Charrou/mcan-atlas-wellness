@@ -109,6 +109,8 @@ interface Translation {
   targetHoursDay: string;
   targetMinutesDay: string;
   loadingWeeklyData: string;
+  daily: string;
+  weekly: string;
 }
 
 const translations: Record<Language, Translation> = {
@@ -219,6 +221,8 @@ const translations: Record<Language, Translation> = {
     targetHoursDay: "Target: 8 hours per day",
     targetMinutesDay: "Target: 60 minutes per day",
     loadingWeeklyData: "Loading weekly data...",
+    daily: "Daily",
+    weekly: "Weekly",
   },
   fr: {
     // Dashboard
@@ -327,6 +331,8 @@ const translations: Record<Language, Translation> = {
     targetHoursDay: "Objectif : 8 heures par jour",
     targetMinutesDay: "Objectif : 60 minutes par jour",
     loadingWeeklyData: "Chargement des données hebdomadaires...",
+    daily: "Quotidien",
+    weekly: "Hebdomadaire",
   },
   ar: {
     // Dashboard
@@ -435,6 +441,8 @@ const translations: Record<Language, Translation> = {
     targetHoursDay: "الهدف: 8 ساعات يومياً",
     targetMinutesDay: "الهدف: 60 دقيقة يومياً",
     loadingWeeklyData: "جار تحميل البيانات الأسبوعية...",
+    daily: "يومي",
+    weekly: "أسبوعي",
   },
 };
 

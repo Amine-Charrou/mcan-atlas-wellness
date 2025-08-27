@@ -336,7 +336,7 @@ export function HabitTracker() {
               className="flex items-center gap-2"
             >
               <Calendar size={16} />
-              Daily
+              {t.daily}
             </Button>
             <Button
               variant={viewMode === "weekly" ? "default" : "ghost"}
@@ -345,7 +345,7 @@ export function HabitTracker() {
               className="flex items-center gap-2"
             >
               <BarChart3 size={16} />
-              Weekly
+              {t.weekly}
             </Button>
           </div>
 
