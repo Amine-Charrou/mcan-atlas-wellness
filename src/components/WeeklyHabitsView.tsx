@@ -387,29 +387,59 @@ export function WeeklyHabitsView() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-wellness-blue mb-1">
-                {weeklyData.length > 0 ? (Math.round(weeklyData.reduce((sum, day) => sum + day.water, 0) / weeklyData.length * 10) / 10) : 0}
+                {(() => {
+                  const daysWithWaterData = weeklyData.filter(day => day.water > 0);
+                  const totalWater = weeklyData.reduce((sum, day) => sum + day.water, 0);
+                  const avgWater = daysWithWaterData.length > 0 ? totalWater / daysWithWaterData.length : totalWater / 7;
+                  return Math.round(avgWater * 10) / 10;
+                })()}
               </div>
               <div className="text-sm text-muted-foreground">{t.avgGlassesDay}</div>
               <div className="text-xs text-muted-foreground mt-1">
-                {weeklyData.length > 0 ? Math.round((weeklyData.reduce((sum, day) => sum + day.water, 0) / weeklyData.length / 8) * 100) : 0}{t.ofTarget}
+                {(() => {
+                  const daysWithWaterData = weeklyData.filter(day => day.water > 0);
+                  const totalWater = weeklyData.reduce((sum, day) => sum + day.water, 0);
+                  const avgWater = daysWithWaterData.length > 0 ? totalWater / daysWithWaterData.length : totalWater / 7;
+                  return Math.round((avgWater / 8) * 100);
+                })()}{t.ofTarget}
               </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary mb-1">
-                {weeklyData.length > 0 ? (Math.round(weeklyData.reduce((sum, day) => sum + day.sleep, 0) / weeklyData.length * 10) / 10) : 0}
+                {(() => {
+                  const daysWithSleepData = weeklyData.filter(day => day.sleep > 0);
+                  const totalSleep = weeklyData.reduce((sum, day) => sum + day.sleep, 0);
+                  const avgSleep = daysWithSleepData.length > 0 ? totalSleep / daysWithSleepData.length : totalSleep / 7;
+                  return Math.round(avgSleep * 10) / 10;
+                })()}
               </div>
               <div className="text-sm text-muted-foreground">{t.avgHoursDay}</div>
               <div className="text-xs text-muted-foreground mt-1">
-                {weeklyData.length > 0 ? Math.round((weeklyData.reduce((sum, day) => sum + day.sleep, 0) / weeklyData.length / 8) * 100) : 0}{t.ofTarget}
+                {(() => {
+                  const daysWithSleepData = weeklyData.filter(day => day.sleep > 0);
+                  const totalSleep = weeklyData.reduce((sum, day) => sum + day.sleep, 0);
+                  const avgSleep = daysWithSleepData.length > 0 ? totalSleep / daysWithSleepData.length : totalSleep / 7;
+                  return Math.round((avgSleep / 8) * 100);
+                })()}{t.ofTarget}
               </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-wellness-green mb-1">
-                {weeklyData.length > 0 ? Math.round(weeklyData.reduce((sum, day) => sum + day.activity, 0) / weeklyData.length) : 0}
+                {(() => {
+                  const daysWithActivityData = weeklyData.filter(day => day.activity > 0);
+                  const totalActivity = weeklyData.reduce((sum, day) => sum + day.activity, 0);
+                  const avgActivity = daysWithActivityData.length > 0 ? totalActivity / daysWithActivityData.length : totalActivity / 7;
+                  return Math.round(avgActivity);
+                })()}
               </div>
               <div className="text-sm text-muted-foreground">{t.avgMinutesDay}</div>
               <div className="text-xs text-muted-foreground mt-1">
-                {weeklyData.length > 0 ? Math.round((weeklyData.reduce((sum, day) => sum + day.activity, 0) / weeklyData.length / 60) * 100) : 0}{t.ofTarget}
+                {(() => {
+                  const daysWithActivityData = weeklyData.filter(day => day.activity > 0);
+                  const totalActivity = weeklyData.reduce((sum, day) => sum + day.activity, 0);
+                  const avgActivity = daysWithActivityData.length > 0 ? totalActivity / daysWithActivityData.length : totalActivity / 7;
+                  return Math.round((avgActivity / 60) * 100);
+                })()}{t.ofTarget}
               </div>
             </div>
           </div>
@@ -421,17 +451,21 @@ export function WeeklyHabitsView() {
               <div className="bg-wellness-blue/10 p-4 rounded-lg">
                 <h5 className="font-medium text-wellness-blue mb-2">Hydration Trend</h5>
                 <p className="text-sm text-muted-foreground">
-                  {weeklyData.length > 0 && weeklyData.reduce((sum, day) => sum + day.water, 0) / weeklyData.length >= 6 
-                    ? "Great hydration habits! Keep it up!" 
-                    : "Try to drink more water daily for better health."}
+                  {(() => {
+                    const daysWithWaterData = weeklyData.filter(day => day.water > 0);
+                    const avgWater = daysWithWaterData.length > 0 ? weeklyData.reduce((sum, day) => sum + day.water, 0) / daysWithWaterData.length : 0;
+                    return avgWater >= 6 ? "Great hydration habits! Keep it up!" : "Try to drink more water daily for better health.";
+                  })()}
                 </p>
               </div>
               <div className="bg-wellness-green/10 p-4 rounded-lg">
                 <h5 className="font-medium text-wellness-green mb-2">Activity Level</h5>
                 <p className="text-sm text-muted-foreground">
-                  {weeklyData.length > 0 && weeklyData.reduce((sum, day) => sum + day.activity, 0) / weeklyData.length >= 30
-                    ? "Excellent activity levels this week!"
-                    : "Consider adding more physical activity to your routine."}
+                  {(() => {
+                    const daysWithActivityData = weeklyData.filter(day => day.activity > 0);
+                    const avgActivity = daysWithActivityData.length > 0 ? weeklyData.reduce((sum, day) => sum + day.activity, 0) / daysWithActivityData.length : 0;
+                    return avgActivity >= 30 ? "Excellent activity levels this week!" : "Consider adding more physical activity to your routine.";
+                  })()}
                 </p>
               </div>
             </div>
