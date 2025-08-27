@@ -138,9 +138,13 @@ export const Auth = ({ onNavigate }: AuthProps) => {
       if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
+          let errorMessage = t.signinError;
+          if (error.message === "Email not confirmed") {
+            errorMessage = "Please check your email and click the confirmation link before signing in.";
+          }
           toast({
             title: "Error",
-            description: t.signinError,
+            description: errorMessage,
             variant: "destructive",
           });
         }
