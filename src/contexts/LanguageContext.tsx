@@ -455,6 +455,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  console.log('LanguageProvider rendering');
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('mcan-language');
     return (saved as Language) || 'en';
@@ -473,6 +474,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     t: translations[language],
   };
 
+  console.log('LanguageProvider value:', value);
+
   return (
     <LanguageContext.Provider value={value}>
       {children}
@@ -482,7 +485,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
+  console.log('useLanguage called, context:', context);
   if (context === undefined) {
+    console.error('LanguageContext is undefined! Provider not found.');
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
